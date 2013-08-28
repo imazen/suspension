@@ -1,3 +1,19 @@
 #!/usr/bin/env ruby 
 
-# suspend file.at 
+# By default, the repositext token library is used
+
+# push -> 
+
+# suspend push from-file to-file [-tokens]
+# from = Suspender.new(from-text,tokenLibrary).suspend
+# to = Suspender.new(new-text,tokenLibrary).suspend
+# 
+
+# suspend strip frome-file to-file [-tokens]
+# Suspender.new(from-text,tokenLibrary).suspend.filtered_text
+
+# suspend export from-file to-file [-tokens]
+# Exports the token offset list. 
+# Suspender.new(from-text,tokenLibrary).suspend.matched_tokens.to_relative.serialize
+
+
