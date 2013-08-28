@@ -24,9 +24,14 @@ module Suspension
 				no_match = true
 				for token in active_tokens
 					if contents = s.scan(token.regex)
-						matched_tokens << SuspendedToken.new(token_start, token.name, contents)
-						no_match = false
-						break
+						if token.is_plaintext 
+							@filtered_text += contents
+							token_start += contents.length
+						else
+							matched_tokens << SuspendedToken.new(token_start, token.name, contents)
+							no_match = false
+							break
+						end 
 					end 
 				end
 				if no_match

@@ -1,6 +1,6 @@
 
 module Suspension
-  class Token < Struct.new(:name, :regex)
+  class Token < Struct.new(:name, :regex, :is_plaintext)
   end 
 
   class SuspendedToken < Struct.new(:position, :name, :contents)
