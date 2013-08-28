@@ -18,6 +18,12 @@ module Suspension
       end).validate
     end 
 
+    def validate
+      raise "All members must of of type SuspendedTokens. #{self.inspect}" if self.any? { |i| !i.is_a?(SuspendedToken)}
+      raise  "Suspended Tokens must be in ascending order. #{elem.position} found after #{result}"  if self.reduce(0){ |result, e| e.position >= result ? e.position : false } === false 
+      self
+    end
+
   end
 
   class RelativeSuspendedTokens < Array
@@ -50,7 +56,8 @@ module Suspension
     end 
 
     def validate
-      raise "Negative offsets not permitted" if self.any? { |i| i.position < 0}
+      raise "All members must of of type SuspendedTokens #{self.inspect}" if self.any? { |i| !i.is_a?(SuspendedToken)}
+      raise "Negative offsets not permitted #{self.inspect}" if self.any? { |i| i.position < 0}
       self
     end
   end 
