@@ -25,6 +25,12 @@ module Suspension
       self
     end
 
+    #Performs a stable sort
+    def stable_sort
+      n = 0
+      AbsoluteSuspendedTokens.new(sort_by {|x| n+= 1; [x.position, n]})
+    end
+
   end
 
   class RelativeSuspendedTokens < Array
