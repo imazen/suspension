@@ -1,7 +1,4 @@
-require 'suspension'
-require 'suspension/test_helpers'
-require 'minitest/autorun'
-require 'minitest/spec/expect'
+require_relative 'helper'
 
 module Suspension
 
@@ -16,11 +13,11 @@ module Suspension
     end
 
     it "roundtrip serializes" do
-      expect(RelativeSuspendedTokens.deserialize(longseq.serialize)).to_equal longseq
+      RelativeSuspendedTokens.deserialize(longseq.serialize).must_equal longseq
     end
 
     it "serializes in tab-delimited form with correct escaping" do
-      expect(longseq.serialize).to_equal [
+      longseq.serialize.must_equal [
         "0\tmark\ta\n",
         "5\tmark\t\"bb\r\nb\"\n",
         "0\tmark\t\"cc\tc\"\n",
@@ -42,7 +39,7 @@ module Suspension
     end
 
     it "converts to and from relative form" do
-      expect(longseq.to_relative.to_absolute).to_equal(longseq)
+      longseq.to_relative.to_absolute.must_equal(longseq)
     end
 
     it "applies deletions" do
@@ -72,11 +69,11 @@ module Suspension
     let(:dmp){ [[0,'aa'], [1,'22'], [-1,'bb'], [0,'cc']]}
 
     it "extracts deletions" do
-      expect(Suspension::Diff.extract_deletions(dmp)).to_equal [[2,4]]
+      Suspension::Diff.extract_deletions(dmp).must_equal [[2,4]]
     end
 
     it "extracts additions" do
-      expect(Suspension::Diff.extract_additions(dmp)).to_equal [[2,4]]
+      Suspension::Diff.extract_additions(dmp).must_equal [[2,4]]
     end
 
   end

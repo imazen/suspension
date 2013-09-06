@@ -1,3 +1,10 @@
+# infrastructure
+require 'rubygems'
+require 'minitest/autorun'
+
+# code under test
+require 'suspension'
+
 module Suspension
   class AbsoluteSuspendedTokens
 
