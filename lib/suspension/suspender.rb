@@ -5,15 +5,15 @@ module Suspension
     attr_accessor :original_text, :token_library
     attr_reader :filtered_text, :matched_tokens
 
-    def initialize(originalText, tokenLibrary)
-      @original_text = originalText
-      @token_library = tokenLibrary
+    def initialize(original_text, token_library)
+      @original_text = original_text
+      @token_library = token_library
     end
 
-    def suspend (token_names = nil)
+    def suspend(token_names = nil)
       token_names = token_names || token_library.map { |t| t.name }
       active_tokens = token_library.select { |t|
-      	token_names.map(&:to_sym).include? t.name.to_sym
+      	token_names.map(&:to_sym).include?(t.name.to_sym)
       }
 
       @matched_tokens = AbsoluteSuspendedTokens.new

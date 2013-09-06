@@ -21,7 +21,7 @@ formats such as Markdown and Wiki can handle it OK.
 ## Command line utility (incomplete)
 
 		suspend push text from-file to-file [-tokens]
-		TextReplayer.new(from-text,to-text).replay
+		TextReplayer.new(from-text, to-text).replay
 
 		suspend push [:subtitle_mark] from-file to-file
 		TokenReplacer.new(from-text,to-text, Suspension.REPOSITEXT_TOKENS, Suspension.REPOSITEXT_TOKENS).replace([:subtitle_mark]) --> to_file

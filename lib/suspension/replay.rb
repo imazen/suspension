@@ -19,7 +19,7 @@ module Suspension
                           .with_additions(Diff.extract_additions(diff))
 
       #Merge source file with target file tokens
-      Unsuspender.new(from.filtered_text,adjusted_tokens).restore
+      Unsuspender.new(from.filtered_text, adjusted_tokens).restore
     end
 
   end
@@ -27,10 +27,10 @@ module Suspension
   class TokenReplacer < Struct.new(:from_text, :to_text, :from_tokens, :to_tokens)
 
     # Requires an array of the token names to transfer/replace
-    def replace which_tokens
+    def replace(which_tokens)
       #Suspend both
-      from = Suspender.new(from_text,from_tokens).suspend
-      to = Suspender.new(to_text,to_tokens).suspend
+      from = Suspender.new(from_text, from_tokens).suspend
+      to = Suspender.new(to_text, to_tokens).suspend
       if from.filtered_text != to.filtered_text
         raise "Text does not match. Run replay to->from first"
       end

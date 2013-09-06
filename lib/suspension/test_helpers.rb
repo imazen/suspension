@@ -1,24 +1,28 @@
 module Suspension
   class AbsoluteSuspendedTokens
 
-    def to_flat
-      self.map{ |t| [t.position, t.contents]}.flatten
+    def self.from_flat flat
+      self.new flat.each_slice(2).map { |pair|
+        SuspendedToken.new(pair[0], :mark, pair[1])
+      }
     end
 
-    def self.from_flat flat
-      self.new flat.each_slice(2).map {|pair| SuspendedToken.new(pair[0], :mark, pair[1])}
+    def to_flat
+      self.map{ |t| [t.position, t.contents] }.flatten
     end
 
   end
 
   class RelativeSuspendedTokens
 
-    def to_flat
-      self.map{ |t| [t.position, t.contents]}.flatten
+    def self.from_flat(flat)
+      self.new flat.each_slice(2).map { |pair|
+        SuspendedToken.new(pair[0], :mark, pair[1])
+      }
     end
 
-    def self.from_flat flat
-      self.new flat.each_slice(2).map {|pair| SuspendedToken.new(pair[0], :mark, pair[1])}
+    def to_flat
+      self.map{ |t| [t.position, t.contents] }.flatten
     end
 
   end
