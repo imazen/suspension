@@ -14,18 +14,18 @@ module Suspension
         token_names = token_names.map(&:to_sym)
         #Filter suspended tokens
         token_subset = token_subset.select {|t| token_names.include? t.name }
-      end 
+      end
 
       @output_text = ""
       last_token = 0
-      for token in token_subset
+      token_subset.each { |token|
         @output_text += filtered_text[last_token..token.position-1]
         last_token = token.position
         @output_text += token.contents
-      end
+      }
       @output_text += filtered_text[last_token..-1]
       @output_text
     end
 
-  end 
+  end
 end
