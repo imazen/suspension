@@ -49,16 +49,16 @@ module Suspension
     describe "apply additions" do
 
       it "adjusts subsequent tokens" do
-        tokens([1,"@",3,"@"]).with_additions([[0,2],[2,5]]).validate.to_flat.must_equal [3,"@",8,"@"]
-        tokens([1,"@"]).with_additions([[0,2]]).validate.to_flat.must_equal [3,"@"]
+        tokens([1,"@",3,"@"]).with_insertions([[0,2],[2,5]]).validate.to_flat.must_equal [3,"@",8,"@"]
+        tokens([1,"@"]).with_insertions([[0,2]]).validate.to_flat.must_equal [3,"@"]
       end
 
       it "adjusts touching tokens for affinity=:left" do
-        tokens([1,"@"]).with_additions([[1,3]], :left).validate.to_flat.must_equal [1,"@"]
+        tokens([1,"@"]).with_insertions([[1,3]], :left).validate.to_flat.must_equal [1,"@"]
       end
 
       it "adjusts touching tokens for affinity=:right" do
-        tokens([1,"@"]).with_additions([[1,3]], :right).validate.to_flat.must_equal [3,"@"]
+        tokens([1,"@"]).with_insertions([[1,3]], :right).validate.to_flat.must_equal [3,"@"]
       end
 
     end
@@ -73,7 +73,7 @@ module Suspension
     end
 
     it "extracts additions" do
-      Suspension::Diff.extract_additions(dmp).must_equal [[2,4]]
+      Suspension::Diff.extract_insertions(dmp).must_equal [[2,4]]
     end
 
   end

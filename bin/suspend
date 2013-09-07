@@ -1,21 +1,21 @@
-#!/usr/bin/env ruby 
+#!/usr/bin/env ruby
 
 # By default, the repositext token library is used
 
-# push -> 
+# push ->
 
 # suspend push from-file to-file [-tokens]
 # from = Suspender.new(from-text,Suspension.REPOSITEXT_TOKENS).suspend
 # to = Suspender.new(new-text,Suspension.REPOSITEXT_TOKENS).suspend
 # diff = diff_main(from.filtered_text, to.filtered_text)
-# adjusted_tokens = to.suspended_tokens.with_deletions(Diff.extract_deletions(diff)).with_additions(Diff.extract_additions(diff))
+# adjusted_tokens = to.suspended_tokens.with_deletions(Diff.extract_deletions(diff)).with_insertions(Diff.extract_insertions(diff))
 # Unsuspender.new(from.filtered_text,adjusted_tokens).restore -> to-file
 
 # suspend strip frome-file to-file [-tokens]
 # Suspender.new(from-text,tokenLibrary).suspend.filtered_text
 
 # suspend export from-file to-file [-tokens]
-# Exports the token offset list. 
+# Exports the token offset list.
 # Suspender.new(from-text,tokenLibrary).suspend.matched_tokens.to_relative.serialize
 
 # suspend import offset-file text-file, to-file

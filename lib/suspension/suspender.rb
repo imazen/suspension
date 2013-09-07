@@ -1,5 +1,4 @@
 module Suspension
-
   class Suspender
 
     attr_accessor :original_text, :token_library
@@ -45,5 +44,4 @@ module Suspension
     end
 
   end
-
 end

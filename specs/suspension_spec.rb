@@ -14,6 +14,15 @@ module Suspension
       result.matched_tokens.to_flat.must_equal [4,"@",8,"%",8,"@"]
     end
 
+    it "doesn't suspend escaped tokens" do
+      result = Suspender.new(
+        'aabb\@ccnn\%@',
+        [Token.new(:a, /(?<![\\])\@/), Token.new(:b, /(?<![\\])\%/)]
+      ).suspend
+      result.filtered_text.must_equal 'aabb\@ccnn\%'
+      result.matched_tokens.to_flat.must_equal [8,"@"]
+    end
+
   end
 
   describe Unsuspender do

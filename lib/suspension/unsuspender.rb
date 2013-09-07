@@ -7,7 +7,7 @@ module Suspension
     # If an array of token_names is specified, only tokens with matching names
     # will be restored - others will be discarded
     def restore(token_names = nil)
-      #Ensure suspended tokens are in absolute form so they can safely be filtered
+      # Ensure suspended tokens are in absolute form so they can safely be filtered
       token_subset = if suspended_tokens.is_a?(RelativeSuspendedTokens)
         suspended_tokens.validate.to_absolute
       else
@@ -15,9 +15,9 @@ module Suspension
       end
 
       if token_names
-        #Convert token names to symbols
+        # Convert token names to symbols
         token_names = token_names.map(&:to_sym)
-        #Filter suspended tokens
+        # Filter suspended tokens
         token_subset = token_subset.select { |t| token_names.include?(t.name) }
       end
 
