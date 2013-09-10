@@ -14,9 +14,9 @@ module Suspension
       diff = diff_algorithm(from.filtered_text, to.filtered_text)
 
       # Adjust target file tokens based on diff
-      adjusted_tokens = to.suspended_tokens \
-                          .with_deletions(Diff.extract_deletions(diff)) \
-                          .with_insertions(Diff.extract_insertions(diff))
+      adjusted_from_tokens = from.suspended_tokens \
+                                 .with_deletions(DiffExtractor.extract_deletions(diff)) \
+                                 .with_insertions(DiffExtractor.extract_insertions(diff))
 
       # Merge source file with target file tokens
       Unsuspender.new(from.filtered_text, adjusted_tokens).restore

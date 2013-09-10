@@ -2,11 +2,10 @@ require 'strscan'
 require 'csv'
 require 'diff_match_patch'
 
-module Suspension
-end
+module Suspension; end
 
 require 'suspension/absolute_suspended_tokens'
-require 'suspension/diff'
+require 'suspension/diff_extractor'
 require 'suspension/relative_suspended_tokens'
 require 'suspension/repositext_tokens'
 require 'suspension/suspended_token'
