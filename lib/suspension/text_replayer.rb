@@ -19,8 +19,11 @@ module Suspension
       @diff_algorithm = diff_algorithm || DiffAlgorithm.new
     end
 
+    # Returns a document that contains to_text's filtered_text and from_text's
+    # tokens.
+    def replay
       from = Suspender.new(from_text, from_tokens).suspend
-      to = Suspender.new(to_text, to_tokens)
+      to = Suspender.new(to_text, to_tokens).suspend
 
       # Diff filtered text from both files
       diff = diff_algorithm.call(from.filtered_text, to.filtered_text)
@@ -30,8 +33,8 @@ module Suspension
                                  .with_deletions(DiffExtractor.extract_deletions(diff)) \
                                  .with_insertions(DiffExtractor.extract_insertions(diff))
 
-      # Merge source file with target file tokens
-      Unsuspender.new(from.filtered_text, adjusted_tokens).restore
+      # Merge `to` filtered_text with adjusted `from` tokens
+      Unsuspender.new(to.filtered_text, adjusted_from_tokens).restore
     end
 
   end

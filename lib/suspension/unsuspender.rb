@@ -3,9 +3,12 @@ module Suspension
 
     attr_reader :output_text
 
-    # Restores the suspended tokens back into their original locations in filtered_text.
-    # If an array of token_names is specified, only tokens with matching names
-    # will be restored - others will be discarded
+    # Restores the suspended tokens back into their original locations in
+    # filtered_text. If an array of token_names is specified, only tokens with
+    # matching names will be restored - others will be discarded.
+    # @param[Array<Symbol>, optional] token_names a list of token names to be
+    #     restored. Defaults to suspended_tokens
+    # @return[String] the restored text
     def restore(token_names = nil)
       # Ensure suspended tokens are in absolute form so they can safely be filtered
       token_subset = if suspended_tokens.is_a?(RelativeSuspendedTokens)
