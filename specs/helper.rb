@@ -6,14 +6,24 @@ require 'minitest/autorun'
 require 'suspension'
 
 module Suspension
+
   class AbsoluteSuspendedTokens
 
-    def self.from_flat flat
-      self.new flat.each_slice(2).map { |pair|
-        SuspendedToken.new(pair[0], :mark, pair[1])
-      }
+    # Instantiates new instance of self from flat array of token tuples
+    # @param[Array<Integer, String>] flat flat representation of AbsoluteSuspendedTokens
+    #     Example: [1,'a', 3,'bb']
+    # @return[AbsoluteSuspendedTokens]
+    def self.from_flat(flat)
+      self.new(
+        flat.each_slice(2).map { |pair|
+          SuspendedToken.new(pair[0], :mark, pair[1])
+        }
+      )
     end
 
+    # Converts self to flat representation
+    # @return[Array<Integer, String>] flat representation of self
+    #     Example: [1,'a', 3,'bb']
     def to_flat
       self.map{ |t| [t.position, t.contents] }.flatten
     end
@@ -22,15 +32,25 @@ module Suspension
 
   class RelativeSuspendedTokens
 
+    # Instantiates new instance of self from flat array of token tuples
+    # @param[Array<Integer, String>] flat flat representation of AbsoluteSuspendedTokens
+    #     Example: [1,'a', 3,'bb']
+    # @return[AbsoluteSuspendedTokens]
     def self.from_flat(flat)
-      self.new flat.each_slice(2).map { |pair|
-        SuspendedToken.new(pair[0], :mark, pair[1])
-      }
+      self.new(
+        flat.each_slice(2).map { |pair|
+          SuspendedToken.new(pair[0], :mark, pair[1])
+        }
+      )
     end
 
+    # Converts self to flat representation
+    # @return[Array<Integer, String>] flat representation of self
+    #     Example: [1,'a', 3,'bb']
     def to_flat
       self.map{ |t| [t.position, t.contents] }.flatten
     end
 
   end
+
 end
