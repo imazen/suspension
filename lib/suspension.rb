@@ -5,6 +5,7 @@ require 'diff_match_patch'
 module Suspension; end
 
 require 'suspension/absolute_suspended_tokens'
+require 'suspension/diff_algorithm'
 require 'suspension/diff_extractor'
 require 'suspension/relative_suspended_tokens'
 require 'suspension/repositext_tokens'
