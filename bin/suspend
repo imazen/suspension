@@ -16,7 +16,7 @@
 
 # suspend export from-file to-file [-tokens]
 # Exports the token offset list.
-# Suspender.new(from-text,tokenLibrary).suspend.matched_tokens.to_relative.serialize
+# Suspender.new(from-text,tokenLibrary).suspend.suspended_tokens.to_relative.serialize
 
 # suspend import offset-file text-file, to-file
 # Merges the offset and text file

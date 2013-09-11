@@ -32,7 +32,7 @@ formats such as Markdown and Wiki can handle it OK.
 		suspend export from-file to-file [-tokens]
 		Exports the token offset list.
 
-		Suspender.new(from-text,Suspension.REPOSITEXT_TOKENS).suspend.matched_tokens.to_relative.serialize
+		Suspender.new(from-text,Suspension.REPOSITEXT_TOKENS).suspend.suspended_tokens.to_relative.serialize
 
 		suspend import offset-file text-file, to-file
 		Merges the offset and text file
