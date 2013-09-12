@@ -1,10 +1,21 @@
 module Suspension
+
+  # Represents a set of suspended tokens with absolute position information.
   class AbsoluteSuspendedTokens < Array
+
+    # Adjusts tokens based on diff
+    # @param[Array<Array>] diff a dmp list of the following form:
+    #     [[-1, "a"], [0, "ab"], [-1, "b"], [1, "x"], [0, "ccnn"], [1, "e"]]
+    # @return[AbsoluteSuspendedTokens] a copy of self, adjustd for diff
+    def adjusted_for_diff(diff)
+      adjusted_for_deletions(DiffExtractor.extract_deletions(diff)) \
+          .adjusted_for_insertions(DiffExtractor.extract_insertions(diff))
+    end
 
     # Returns copy of self, adjusted for deletions
     # @param[Array<Array>] deletions as as array of start/end pairs: [[0,3], [8,12], ...]
-    # @param[AbsoluteTokens] a copy of self, adjusted for deletions
-    def with_deletions(deletions)
+    # @param[AbsoluteSuspendedTokens] a copy of self, adjusted for deletions
+    def adjusted_for_deletions(deletions)
       assert_ordered_list_of_start_end_pairs(deletions)
       AbsoluteSuspendedTokens.new(
         map { |token|
@@ -25,8 +36,8 @@ module Suspension
     # Returns copy of self, adjusted for insertions
     # @param[Array<Array>] insertions as array of start/end pairs: [[0,3], [8,12], ...]
     # @param[Symbol] affinity, one of :left, :right
-    # @param[AbsoluteTokens] a copy of self, adjusted for insertions
-    def with_insertions(insertions, affinity = :left)
+    # @param[AbsoluteSuspendedTokens] a copy of self, adjusted for insertions
+    def adjusted_for_insertions(insertions, affinity = :left)
       assert_ordered_list_of_start_end_pairs(insertions)
       unless [:left, :right].include?(affinity)
         raise "Unrecognized affinity value #{ affinity.inspect }"
@@ -77,7 +88,7 @@ module Suspension
     end
 
     # Returns copy of self with entries sorted stabily
-    # @return[AbsoluteTokens] sorted copy of self with secondary sorting key
+    # @return[AbsoluteSuspendedTokens] sorted copy of self with secondary sorting key
     #                         for suspended_tokens with identical position
     def stable_sort
       n = 0

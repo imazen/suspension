@@ -4,6 +4,23 @@ module Suspension
 
   describe DiffAlgorithm do
 
+    describe "symbol to integer conversion for segment_type" do
+
+      {
+        :delete => -1,
+        :equal => 0,
+        :insert => 1,
+        -1 => -1,
+        0 => 0,
+        1 => 1
+      }.each do |from,to|
+        it "converts '#{ from }' to '#{ to }'" do
+          DiffAlgorithm::SYM_TO_INT_MAP[from].must_equal to
+        end
+      end
+
+    end
+
     describe "call" do
 
       it "returns segment_type -1 for deletion" do

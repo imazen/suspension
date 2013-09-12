@@ -28,12 +28,12 @@ module Suspension
         raise ArgumentError, "Filtered text does not match. Run replay to->from first"
       end
 
-      # Remove 'which_token_names' from 'to_text', replacing them with tokens
-      # from 'from_text'.
+      # Remove 'which_token_names' from 'from_text', replacing them with tokens
+      # from 'to_text'.
       retained_tokens = from.suspended_tokens \
                             .reject { |t| which_token_names.include?(t.name) }
       updated_tokens = to.suspended_tokens \
-                          .select { |t| which_token_names.include?(t.name) }
+                         .select { |t| which_token_names.include?(t.name) }
       # Sort the tokens correctly so they can be applied
       new_tokens = AbsoluteSuspendedTokens.new(
         retained_tokens + updated_tokens
