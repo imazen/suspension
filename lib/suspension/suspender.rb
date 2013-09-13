@@ -12,9 +12,9 @@ module Suspension
       @token_library = token_library
     end
 
-    # Suspends tokens from original_text, computing
+    # Suspends tokens from original_text, computes
     # * filtered_text - the original_text minus suspended tokens
-    # * suspended_tokens - a list of suspended tokens
+    # * suspended_tokens - a list of absolute suspended tokens
     # @param[Array<Symbol>, optional] token_names an array of symbolized token
     #                                 names, defaults to names from @token_library
     # @return[Suspender] self
