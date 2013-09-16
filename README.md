@@ -17,6 +17,16 @@ formats such as Markdown and Wiki can handle it OK.
 * RelativeSuspendedTokens - (De)serialize a tab-delimited syntax for the offsets.
 * TokenReplacer - Push token offsets from one file to another.
 
+## How to run specs
+
+Run entire spec suite:
+
+    rake
+
+or just run a single spec file:
+
+    ruby specs/repositext_tokens_spec.rb
+
 
 ## Command line utility (incomplete)
 
