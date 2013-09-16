@@ -17,7 +17,8 @@ module Suspension
     end
 
     # Returns a document that syncs `syncd_token_names` in to_text based on
-    # where they are located in `from_text`.
+    # where they are located in `from_text`. Retains all from_text's other
+    # tokens that are not in `syncd_token_names`
     # @param[Array<Symbol>] syncd_token_names an Array of token names to be
     #     replaced.
     def replace(syncd_token_names)

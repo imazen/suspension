@@ -55,14 +55,6 @@ module Suspension
       end
     end
 
-    describe "atx_header" do
-      ["#", "##", "###", "####", "#####", "######"].each do |test_string|
-        it "parses '#{ test_string.inspect }'" do
-          token_must_parse_string(:atx_header, test_string)
-        end
-      end
-    end
-
     describe "emphasis" do
       ["*", "**", "_", "__"].each do |test_string|
         it "parses '#{ test_string.inspect }'" do
@@ -84,10 +76,26 @@ module Suspension
       end
     end
 
-    describe "header id" do
+    describe "header_atx" do
+      ["#", "##", "###", "####", "#####", "######"].each do |test_string|
+        it "parses '#{ test_string.inspect }'" do
+          token_must_parse_string(:header_atx, test_string)
+        end
+      end
+    end
+
+    describe "header_id" do
       ['{#id}'].each do |test_string|
         it "parses '#{ test_string.inspect }'" do
           token_must_parse_string(:header_id, test_string)
+        end
+      end
+    end
+
+    describe "header_setext" do
+      ["-\n", "------------\n", "=\n", "===\n"].each do |test_string|
+        it "parses '#{ test_string.inspect }'" do
+          token_must_parse_string(:header_setext, test_string)
         end
       end
     end
@@ -108,10 +116,14 @@ module Suspension
       end
     end
 
-    describe "setext_header" do
-      ["-\n", "------------\n", "=\n", "===\n"].each do |test_string|
+    describe "image" do
+      [
+        "![alt text](/images/other.png)",
+        "![alt text](/images/other.png \"title\")",
+        "![alt text]()"
+      ].each do |test_string|
         it "parses '#{ test_string.inspect }'" do
-          token_must_parse_string(:setext_header, test_string)
+          token_must_parse_string(:image, test_string)
         end
       end
     end

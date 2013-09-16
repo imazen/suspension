@@ -17,6 +17,11 @@ module Suspension
 
   IAL = /\{:#{ALD_ANY_CHARS}*?\}/
 
+  # TODO: Link any chars are naive implementations that don't allow for brackets
+  # or parens in title or url.
+  LINK_TEXT_ANY_CHARS = /\\\]|[^\]]/
+  LINK_URL_ANY_CHARS = /\\\)|[^\)]/
+
   # Initialize tokens with :name, :regex, :is_plain_text
   AT_SPECIFIC_TOKENS = [
     [:gap_mark, /%/],
@@ -26,14 +31,15 @@ module Suspension
 
   KRAMDOWN_SUBSET_TOKENS = [
     [:ald, ALD],
-    [:atx_header, /^\#{1,6}/],
     [:blank_line, "\n\n\n"],
     [:emphasis, /(\*\*?)|(__?)/],
     [:extension, /#{EXT_WITH_BODY}|#{EXT_WITHOUT_BODY}/],
+    [:header_atx, /^\#{1,6}/],
     [:header_id, /\{\##{ALD_ID_NAME}\}/],
+    [:header_setext, /^(-|=)+\s*?\n/],
     [:horizontal_rule, /^#{OPT_SPACE}(\*|-|_)[ \t]*\1[ \t]*\1(\1|[ \t])*\n/],
     [:ial, IAL],
-    [:setext_header, /^(-|=)+\s*?\n/]
+    [:image, /!\[#{LINK_TEXT_ANY_CHARS}+\]\(#{LINK_URL_ANY_CHARS}*?\)/]
   ].map { |e| Token.new(*e) }
 
   REPOSITEXT_TOKENS = AT_SPECIFIC_TOKENS + KRAMDOWN_SUBSET_TOKENS
