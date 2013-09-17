@@ -12,7 +12,7 @@ module Suspension
     def initialize(from_text, to_text, from_tokens = nil, to_tokens = nil)
       @from_text = from_text
       @to_text = to_text
-      @from_tokens = from_tokens || Suspension.REPOSITEXT_TOKENS
+      @from_tokens = from_tokens || Suspension::REPOSITEXT_TOKENS
       @to_tokens = to_tokens || from_tokens
     end
 

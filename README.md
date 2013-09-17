@@ -34,15 +34,15 @@ or just run a single spec file:
 		TextReplayer.new(from-text, to-text).replay
 
 		suspend push [:subtitle_mark] from-file to-file
-		TokenReplacer.new(from-text,to-text, Suspension.REPOSITEXT_TOKENS, Suspension.REPOSITEXT_TOKENS).replace([:subtitle_mark]) --> to_file
+		TokenReplacer.new(from-text,to-text, Suspension::REPOSITEXT_TOKENS, Suspension::REPOSITEXT_TOKENS).replace([:subtitle_mark]) --> to_file
 
 		suspend strip frome-file to-file [-tokens]
-		Suspender.new(from-text,Suspension.REPOSITEXT_TOKENS).suspend.filtered_text
+		Suspender.new(from-text,Suspension::REPOSITEXT_TOKENS).suspend.filtered_text
 
 		suspend export from-file to-file [-tokens]
 		Exports the token offset list.
 
-		Suspender.new(from-text,Suspension.REPOSITEXT_TOKENS).suspend.suspended_tokens.to_relative.serialize
+		Suspender.new(from-text,Suspension::REPOSITEXT_TOKENS).suspend.suspended_tokens.to_relative.serialize
 
 		suspend import offset-file text-file, to-file
 		Merges the offset and text file
