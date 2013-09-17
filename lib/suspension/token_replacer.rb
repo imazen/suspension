@@ -16,12 +16,12 @@ module Suspension
       @to_tokens = to_tokens || from_tokens
     end
 
-    # Returns a document that syncs `syncd_token_names` in to_text based on
+    # Returns a document that syncs `synced_token_names` in to_text based on
     # where they are located in `from_text`. Retains all from_text's other
-    # tokens that are not in `syncd_token_names`
-    # @param[Array<Symbol>] syncd_token_names an Array of token names to be
+    # tokens that are not in `synced_token_names`
+    # @param[Array<Symbol>] synced_token_names an Array of token names to be
     #     replaced.
-    def replace(syncd_token_names)
+    def replace(synced_token_names)
       # Suspend both texts
       from = Suspender.new(from_text, from_tokens).suspend
       to = Suspender.new(to_text, to_tokens).suspend
@@ -29,12 +29,12 @@ module Suspension
         raise ArgumentError, "Filtered text does not match. Run replay to->from first"
       end
 
-      # Remove 'syncd_token_names' from 'from_text', replacing them with tokens
+      # Remove 'synced_token_names' from 'from_text', replacing them with tokens
       # from 'to_text'.
       retained_tokens = from.suspended_tokens \
-                            .reject { |t| syncd_token_names.include?(t.name) }
+                            .reject { |t| synced_token_names.include?(t.name) }
       updated_tokens = to.suspended_tokens \
-                         .select { |t| syncd_token_names.include?(t.name) }
+                         .select { |t| synced_token_names.include?(t.name) }
       # Sort the tokens correctly so they can be applied
       new_tokens = AbsoluteSuspendedTokens.new(
         retained_tokens + updated_tokens
