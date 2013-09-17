@@ -32,7 +32,7 @@ module Suspension
       while !s.eos? do
         no_match = true
         active_tokens.each { |token|
-          if contents = s.scan(token.regex)
+          if (!token.must_be_at_start_of_line || s.beginning_of_line?) && (contents = s.scan(token.regex))
             if token.is_plaintext
               @filtered_text += contents
               token_start += contents.length
