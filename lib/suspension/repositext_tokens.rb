@@ -39,7 +39,6 @@ module Suspension
   ].map { |e| Token.new(*e) }
 
   KRAMDOWN_SUBSET_TOKENS = [
-    [:blank_line, "\n\n\n"],
     [:ald, ALD, true],
     [:emphasis, /(\*\*?)|(__?)/],
     [:extension, /#{EXT_WITH_BODY}|#{EXT_WITHOUT_BODY}/],
