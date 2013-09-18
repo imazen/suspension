@@ -6,6 +6,7 @@ module Suspension
 
     %w[
       is_plaintext
+      must_be_start_of_line
       name
       regex
     ].each do |accessor_name|

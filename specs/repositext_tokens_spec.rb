@@ -4,10 +4,10 @@ module Suspension
 
   describe 'REPOSITEXT_TOKENS' do
 
-    # Helper to test token regexes
+    # Helper to test token regexes. Asserts that REPOSITEXT_TOKEN with
+    # token_name will consume test_string in its entirety.
     # @param[Symbol] token_name the name of the token under test
     # @param[String] test_string the test string
-    # @return[String] the matched token
     def token_must_parse_string(token_name, test_string)
       token = get_token(token_name)
       raise(ArgumentError, "Invalid token_name: #{ token_name.inspect }") unless token

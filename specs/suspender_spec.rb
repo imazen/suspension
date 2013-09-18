@@ -13,7 +13,7 @@ module Suspension
       result.suspended_tokens.to_flat.must_equal [4,"@",8,"%",8,"@"]
     end
 
-    it "doesn't suspend html entities 1" do
+    it "doesn't suspend simple html entities" do
       result = Suspender.new(
         'and &#42;extraordinary&#42; powers',
         Suspension::REPOSITEXT_TOKENS
@@ -22,7 +22,7 @@ module Suspension
       result.suspended_tokens.to_flat.must_equal []
     end
 
-    it "doesn't suspend html entities 2" do
+    it "doesn't suspend html entities mixed with tokens" do
       result = Suspender.new(
         'aabb&#64;cc@nn&#37;&#64;',
         [Token.new(:a, /@/), Token.new(:b, /%/)]
