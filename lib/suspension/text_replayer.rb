@@ -28,8 +28,8 @@ module Suspension
       # Diff filtered text from both files
       diff = diff_algorithm.call(from.filtered_text, to.filtered_text)
 
-      # Adjust target file tokens based on diff
-      adjusted_from_tokens = from.suspended_tokens.adjusted_for_diff(diff)
+      # Adjust to file tokens based on diff
+      adjusted_from_tokens = from.suspended_tokens.adjust_for_diff(diff)
 
       # Merge `to` filtered_text with adjusted `from` tokens
       Unsuspender.new(to.filtered_text, adjusted_from_tokens).restore
