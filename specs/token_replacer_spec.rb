@@ -8,7 +8,7 @@ module Suspension
       TokenReplacer.new(
         "aab@bccnn%",
         "aabbc@cnn@",
-        [Token.new(:a, /(?<![\\])@/), Token.new(:b, /(?<![\\])%/)]
+        [Token.new(:a, /@/), Token.new(:b, /%/)]
       ).replace([:a]).must_equal "aabbc@cnn%@"
     end
 

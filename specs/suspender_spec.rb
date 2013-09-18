@@ -7,7 +7,7 @@ module Suspension
     it "suspends tokens" do
       result = Suspender.new(
         "aabb@ccnn%@",
-        [Token.new(:a, /(?<![\\])@/), Token.new(:b, /(?<![\\])%/)]
+        [Token.new(:a, /@/), Token.new(:b, /%/)]
       ).suspend
       result.filtered_text.must_equal "aabbccnn"
       result.suspended_tokens.to_flat.must_equal [4,"@",8,"%",8,"@"]
@@ -25,7 +25,7 @@ module Suspension
     it "doesn't suspend html entities 2" do
       result = Suspender.new(
         'aabb&#64;cc@nn&#37;&#64;',
-        [Token.new(:a, /(?<![\\])@/), Token.new(:b, /(?<![\\])%/)]
+        [Token.new(:a, /@/), Token.new(:b, /%/)]
       ).suspend
       result.filtered_text.must_equal 'aabb&#64;ccnn&#37;&#64;'
       result.suspended_tokens.to_flat.must_equal [11,"@"]
