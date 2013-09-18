@@ -1,19 +1,19 @@
 module Suspension
   class Suspender
 
-    attr_accessor :original_text, :token_library
-    attr_reader :filtered_text # the original_text minus suspended tokens
-    attr_reader :suspended_tokens # any tokens suspended from original_text
+    attr_accessor :original_doc, :token_library
+    attr_reader :filtered_text # the original_doc minus suspended tokens
+    attr_reader :suspended_tokens # any tokens suspended from original_doc
 
-    # @param[String] original_text the text that contains tokens to be suspended
+    # @param[String] original_doc document that contains tokens to be suspended
     # @param[Array<Token>] token_library an array of tokens to suspend
-    def initialize(original_text, token_library)
-      @original_text = original_text
+    def initialize(original_doc, token_library)
+      @original_doc = original_doc
       @token_library = token_library
     end
 
-    # Suspends tokens from original_text, computes
-    # * filtered_text - the original_text minus suspended tokens
+    # Suspends tokens from original_doc, computes
+    # * filtered_text - the original_doc minus suspended tokens
     # * suspended_tokens - a list of absolute suspended tokens
     # @param[Array<Symbol>, optional] token_names an array of symbolized token
     #                                 names, defaults to names from @token_library
@@ -28,7 +28,7 @@ module Suspension
       token_start = 0
       @filtered_text = ""
 
-      s = StringScanner.new(@original_text)
+      s = StringScanner.new(@original_doc)
       while !s.eos? do
         no_match = true
         active_tokens.each { |token|

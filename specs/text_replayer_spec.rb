@@ -6,8 +6,8 @@ module Suspension
 
     it "replays" do
       TextReplayer.new(
-        "aabb@ccnn%@",
         "aabxccnne",
+        "aabb@ccnn%@",
         [Token.new(:a, /@/), Token.new(:b, /%/)]
       ).replay.must_equal "aab@xccnn%@e"
     end

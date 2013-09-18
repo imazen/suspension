@@ -1,38 +1,38 @@
 module Suspension
   class TextReplayer
 
-    attr_accessor :from_text, :to_text, :from_tokens, :to_tokens, :diff_algorithm
+    attr_accessor :doc_a_text, :doc_b_tokens, :tokens_a, :tokens_b, :diff_algorithm
 
-    # @param[String] from_text old version of text, with tokens
-    # @param[String] to_text new version of text, with or without tokens
-    # @param[Array<Token>, optional] from_tokens tokens to be suspended from
-    #     from_text, defaults to REPOSITEXT_TOKENS
-    # @param[Array<Token>, optional] to_tokens tokens to be suspended from
-    #     to_text, defaults to REPOSITEXT_TOKENS
+    # @param[String] doc_a_text document that provides the authoritative text.
+    # @param[String] doc_b_tokens document that provides the authoritative tokens.
+    # @param[Array<Token>, optional] tokens_a tokens to be suspended from
+    #     doc_a_text, defaults to REPOSITEXT_TOKENS.
+    # @param[Array<Token>, optional] tokens_b tokens to be suspended from
+    #     doc_b_tokens, defaults to REPOSITEXT_TOKENS.
     # @param[Proc] diff_algorithm The diff algo, accepts two params (strings to compare)
-    #              defaults to DiffMatchPatch
-    def initialize(from_text, to_text, from_tokens = nil, to_tokens = nil, diff_algorithm = nil)
-      @from_text = from_text
-      @to_text = to_text
-      @from_tokens = from_tokens || Suspension::REPOSITEXT_TOKENS
-      @to_tokens = to_tokens || @from_tokens
+    #              defaults to DiffAlgorithm
+    def initialize(doc_a_text, doc_b_tokens, tokens_a = nil, tokens_b = nil, diff_algorithm = nil)
+      @doc_a_text = doc_a_text
+      @doc_b_tokens = doc_b_tokens
+      @tokens_a = tokens_a || Suspension::REPOSITEXT_TOKENS
+      @tokens_b = tokens_b || @tokens_a
       @diff_algorithm = diff_algorithm || DiffAlgorithm.new
     end
 
-    # Returns a document that contains to_text's filtered_text and from_text's
+    # Returns a document that contains doc_b_tokens's filtered_text and doc_a_text's
     # tokens.
     def replay
-      from = Suspender.new(from_text, from_tokens).suspend
-      to = Suspender.new(to_text, to_tokens).suspend
+      text_authority = Suspender.new(doc_a_text, tokens_a).suspend
+      token_authority = Suspender.new(doc_b_tokens, tokens_b).suspend
 
       # Diff filtered text from both files
-      diff = diff_algorithm.call(from.filtered_text, to.filtered_text)
+      diff = diff_algorithm.call(token_authority.filtered_text, text_authority.filtered_text)
 
-      # Adjust to file tokens based on diff
-      adjusted_from_tokens = from.suspended_tokens.adjust_for_diff(diff)
+      # Adjust token_authority's token offsets based on diff
+      adjusted_authoritative_tokens = token_authority.suspended_tokens.adjust_for_diff(diff)
 
-      # Merge `to` filtered_text with adjusted `from` tokens
-      Unsuspender.new(to.filtered_text, adjusted_from_tokens).restore
+      # Merge text_authority's filtered_text with token_authority's adjusted tokens
+      Unsuspender.new(text_authority.filtered_text, adjusted_authoritative_tokens).restore
     end
 
   end

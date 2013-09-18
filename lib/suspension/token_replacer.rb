@@ -1,46 +1,49 @@
 module Suspension
   class TokenReplacer
 
-    attr_accessor :from_text, :to_text, :from_tokens, :to_tokens
+    attr_accessor :doc_a_tokens, :doc_b_text, :tokens_a, :tokens_b
 
-    # @param[String] from_text old version of text, with tokens
-    # @param[String] to_text new version of text, with or without tokens
-    # @param[Array<Token>, optional] from_tokens tokens to be suspended from
-    #     from_text, defaults to REPOSITEXT_TOKENS
-    # @param[Array<Token>, optional] to_tokens tokens to be suspended from
-    #     to_text, defaults to REPOSITEXT_TOKENS
-    def initialize(from_text, to_text, from_tokens = nil, to_tokens = nil)
-      @from_text = from_text
-      @to_text = to_text
-      @from_tokens = from_tokens || Suspension::REPOSITEXT_TOKENS
-      @to_tokens = to_tokens || from_tokens
+    # @param[String] doc_a_tokens document that provides the authoritative tokens.
+    # @param[String] doc_b_text document that provides the authoritative text.
+    # @param[Array<Token>, optional] tokens_a tokens to be suspended from
+    #     doc_a_tokens, defaults to REPOSITEXT_TOKENS.
+    # @param[Array<Token>, optional] tokens_b tokens to be suspended from
+    #     doc_b_text, defaults to REPOSITEXT_TOKENS.
+    def initialize(doc_a_tokens, doc_b_text, tokens_a = nil, tokens_b = nil)
+      @doc_a_tokens = doc_a_tokens
+      @doc_b_text = doc_b_text
+      @tokens_a = tokens_a || Suspension::REPOSITEXT_TOKENS
+      @tokens_b = tokens_b || @tokens_a
     end
 
-    # Returns a document that syncs `synced_token_names` in to_text based on
-    # where they are located in `from_text`. Retains all from_text's other
-    # tokens that are not in `synced_token_names`
+    # Returns a document that replaces `synced_token_names` in `doc_b_text`
+    # based on where they are located in `doc_a_tokens`. Retains all
+    #{ }`doc_b_text`'s other tokens that are not in `synced_token_names`.
     # @param[Array<Symbol>] synced_token_names an Array of token names to be
     #     replaced.
+    # @return[String] document with replaced tokens
     def replace(synced_token_names)
       # Suspend both texts
-      from = Suspender.new(from_text, from_tokens).suspend
-      to = Suspender.new(to_text, to_tokens).suspend
-      if from.filtered_text != to.filtered_text
+      token_authority = Suspender.new(doc_a_tokens, tokens_a).suspend
+      text_authority = Suspender.new(doc_b_text, tokens_b).suspend
+      if token_authority.filtered_text != text_authority.filtered_text
         raise ArgumentError, "Filtered text does not match. Run replay to->from first"
       end
 
-      # Remove 'synced_token_names' from 'from_text', replacing them with tokens
-      # from 'to_text'.
-      retained_tokens = from.suspended_tokens \
+      # Remove 'synced_token_names' from 'doc_b_text', replacing them with tokens
+      # from 'doc_a_tokens'.
+      retained_tokens = text_authority \
+                            .suspended_tokens \
                             .reject { |t| synced_token_names.include?(t.name) }
-      updated_tokens = to.suspended_tokens \
-                         .select { |t| synced_token_names.include?(t.name) }
+      updated_tokens = token_authority \
+                          .suspended_tokens \
+                          .select { |t| synced_token_names.include?(t.name) }
       # Sort the tokens correctly so they can be applied
       new_tokens = AbsoluteSuspendedTokens.new(
         retained_tokens + updated_tokens
       ).stable_sort
       # Regenerate the file
-      Unsuspender.new(to.filtered_text, new_tokens).restore
+      Unsuspender.new(text_authority.filtered_text, new_tokens).restore
     end
 
   end
