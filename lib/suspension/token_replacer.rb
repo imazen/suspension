@@ -39,8 +39,10 @@ module Suspension
                             .suspended_tokens \
                             .select { |t| replaced_token_names.include?(t.name) }
       # Sort the tokens correctly so they can be applied
+      # NOTE: it is important to add the updated_tokens first to achieve the
+      # expected behavior.
       new_tokens = AbsoluteSuspendedTokens.new(
-        retained_tokens + updated_tokens
+        updated_tokens + retained_tokens
       ).stable_sort
       # Regenerate the file
       Unsuspender.new(text_authority.filtered_text, new_tokens).restore
