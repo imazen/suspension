@@ -79,10 +79,10 @@ module Suspension
     # @return[AbsoluteSuspendedTokens] self
     def validate
       if any? { |e| !e.is_a?(SuspendedToken) }
-        raise "All members must be of type SuspendedTokens. #{ entries.inspect }"
+        raise(ArgumentError, "All members must be of type SuspendedTokens. #{ entries.inspect }")
       end
       if reduce(0){ |pos_memo, e| e.position >= pos_memo ? e.position : false } === false
-        raise  "Suspended Tokens must be in ascending order. #{ entries.inspect }"
+        raise(ArgumentError, "Suspended Tokens must be in ascending order. #{ entries.inspect }")
       end
       self
     end
@@ -107,7 +107,7 @@ module Suspension
         diff_list.any? { |a| a.length != 2 } || \
         diff_list.flatten.reduce(0){ |memo, e| e >= memo ? e : false } === false
       )
-        raise "Array of ordered start/end pairs expected"
+        raise(ArgumentError, "Array of ordered start/end pairs expected")
       end
     end
 
