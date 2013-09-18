@@ -8,7 +8,7 @@
 # from = Suspender.new(from-text,Suspension::REPOSITEXT_TOKENS).suspend
 # to = Suspender.new(new-text,Suspension::REPOSITEXT_TOKENS).suspend
 # diff = diff_main(from.filtered_text, to.filtered_text)
-# adjusted_tokens = to.suspended_tokens.adjusted_for_diff(diff)
+# adjusted_tokens = to.suspended_tokens.adjust_for_diff(diff)
 # Unsuspender.new(from.filtered_text,adjusted_tokens).restore -> to-file
 
 # suspend strip frome-file to-file [-tokens]

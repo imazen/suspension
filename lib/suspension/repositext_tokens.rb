@@ -8,7 +8,7 @@ module Suspension
   #   line since at time of scan, the char will be at the beginning of the string
   #   to be scanned. We use StringScanner#beginning_of_line? (aka #bol?) to
   #   detect if current match position is at beginning of line. So instead of
-  #   adding `^` to the regex, you have to set the `must_be_at_start_of_line`
+  #   adding `^` to the regex, you have to set the `must_be_start_of_line`
   #   flag to true.
 
   # Regex helpers
@@ -26,12 +26,12 @@ module Suspension
 
   IAL = /\{:#{ALD_ANY_CHARS}*?\}/
 
-  # TODO: Link any chars are naive implementations that don't allow for brackets
-  # or parens in title or url.
+  # TODO: Both LINK_..._ANY_CHARS are naive implementations that don't allow for
+  # unescaped brackets or parens in title or url.
   LINK_TEXT_ANY_CHARS = /\\\]|[^\]]/
   LINK_URL_ANY_CHARS = /\\\)|[^\)]/
 
-  # Initialize tokens with :name, :regex, :must_be_at_start_of_line, :is_plain_text
+  # Initialize tokens with :name, :regex, :must_be_start_of_line, :is_plain_text
   AT_SPECIFIC_TOKENS = [
     [:gap_mark, /%/],
     [:record, /\^\^\^\s*?#{IAL}?\s*?\n/, true],

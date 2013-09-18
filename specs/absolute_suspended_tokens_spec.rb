@@ -16,10 +16,10 @@ module Suspension
       longseq.to_relative.to_absolute.must_equal(longseq)
     end
 
-    describe "adjusted_for_diff" do
+    describe "adjust_for_diff" do
 
       it "adjusts for deletions and insertions" do
-        tokens([1,"@", 5,'%']).adjusted_for_diff([[-1,'a'], [0,'bb'], [1,'cc']]) \
+        tokens([1,"@", 5,'%']).adjust_for_diff([[-1,'a'], [0,'bb'], [1,'cc']]) \
                               .validate.to_flat \
                               .must_equal [0,"@",6,"%"]
       end

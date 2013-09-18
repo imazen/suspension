@@ -7,7 +7,7 @@ module Suspension
     # @param[Array<Array>] diff a dmp list of the following form:
     #     [[-1, "a"], [0, "ab"], [-1, "b"], [1, "x"], [0, "ccnn"], [1, "e"]]
     # @return[AbsoluteSuspendedTokens] a copy of self, adjustd for diff
-    def adjusted_for_diff(diff)
+    def adjust_for_diff(diff)
       adjusted_for_deletions(DiffExtractor.extract_deletions(diff)) \
           .adjusted_for_insertions(DiffExtractor.extract_insertions(diff))
     end
