@@ -38,8 +38,15 @@ module Suspension
     end
 
     describe "record" do
-      it "parses simple record" do
-        token_must_parse_string(:record, "^^^\n")
+      [
+        "^^^\n",
+        "^^^ {:.rid}\n",
+        "^^^\n{:.rid}\n",
+        "^^^  {:.rid #rid-123abc}\n"
+      ].each do |test_string|
+        it "parses '#{ test_string.inspect }'" do
+          token_must_parse_string(:record, test_string)
+        end
       end
     end
 
@@ -109,7 +116,7 @@ module Suspension
     end
 
     describe "ial" do
-      ["{: #ial}"].each do |test_string|
+      ["{: #ial}", "{:.rid}\n"].each do |test_string|
         it "parses '#{ test_string.inspect }'" do
           token_must_parse_string(:ial, test_string)
         end

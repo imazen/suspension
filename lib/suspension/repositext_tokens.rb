@@ -34,7 +34,7 @@ module Suspension
   # Initialize tokens with :name, :regex, :must_be_start_of_line, :is_plain_text
   AT_SPECIFIC_TOKENS = [
     [:gap_mark, /%/],
-    [:record, /\^\^\^\s*?#{IAL}?\s*?\n/, true],
+    [:record, /\^\^\^\s*?\n?#{IAL}?\s*?\n/, true],
     [:subtitle_mark, /@/]
   ].map { |e| Token.new(*e) }
 
@@ -46,7 +46,7 @@ module Suspension
     [:header_id, /\{\##{ALD_ID_NAME}\}/],
     [:header_setext, /(-|=)+\s*?\n/, true],
     [:horizontal_rule, /#{OPT_SPACE}(\*|-|_)[ \t]*\1[ \t]*\1(\1|[ \t])*\n/, true],
-    [:ial, IAL],
+    [:ial, /#{IAL}\s*?\n?/],
     [:image, /!\[#{LINK_TEXT_ANY_CHARS}+\]\(#{LINK_URL_ANY_CHARS}*?\)/]
   ].map { |e| Token.new(*e) }
 
