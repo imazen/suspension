@@ -17,47 +17,42 @@ module Suspension
     end
 
     describe "adjust_for_diff" do
-
       it "adjusts for deletions and insertions" do
         tokens([1,"@", 5,'%']).adjust_for_diff([[-1,'a'], [0,'bb'], [1,'cc']]) \
                               .validate.to_flat \
                               .must_equal [0,"@",6,"%"]
       end
-
     end
 
-    describe "adjusted_for_deletions" do
-
+    describe "adjust_for_deletions" do
       it "adjusts for a simple deletion" do
-        tokens([1,"@"]).adjusted_for_deletions([[0,2]]).validate.to_flat \
+        tokens([1,"@"]).adjust_for_deletions([[0,2]]).validate.to_flat \
                        .must_equal [0,"@"]
       end
 
       it "adjusts subsequent tokens" do
-        tokens([5,"@",8,"@"]).adjusted_for_deletions([[0,2],[4,5]]).validate.to_flat \
+        tokens([5,"@",8,"@"]).adjust_for_deletions([[0,2],[4,5]]).validate.to_flat \
                              .must_equal [2,"@",5,"@"]
       end
-
     end
 
-    describe "adjusted_for_insertions" do
-
+    describe "adjust_for_insertions" do
       it "adjusts for a simple insertion" do
-        tokens([1,"@"]).adjusted_for_insertions([[0,2]]).validate.to_flat.must_equal [3,"@"]
+        tokens([1,"@"]).adjust_for_insertions([[0,2]]).validate.to_flat.must_equal [3,"@"]
       end
 
       it "adjusts subsequent tokens" do
-        tokens([1,"@",3,"@"]).adjusted_for_insertions([[0,2],[2,5]]).validate.to_flat \
+        tokens([1,"@",3,"@"]).adjust_for_insertions([[0,2],[2,5]]).validate.to_flat \
                              .must_equal [3,"@",8,"@"]
       end
 
       it "adjusts touching tokens for affinity=:left" do
-        tokens([1,"@"]).adjusted_for_insertions([[1,3]], :left).validate.to_flat \
+        tokens([1,"@"]).adjust_for_insertions([[1,3]], :left).validate.to_flat \
                        .must_equal [1,"@"]
       end
 
       it "adjusts touching tokens for affinity=:right" do
-        tokens([1,"@"]).adjusted_for_insertions([[1,3]], :right).validate.to_flat \
+        tokens([1,"@"]).adjust_for_insertions([[1,3]], :right).validate.to_flat \
                        .must_equal [3,"@"]
       end
 

@@ -12,8 +12,10 @@ module Suspension
 
   class AbsoluteSuspendedTokens
 
-    # Instantiates new instance of self from flat array of token tuples
-    # @param[Array<Integer, String>] flat flat representation of AbsoluteSuspendedTokens
+    # Instantiates new instance of self from flat array of token tuples.
+    # @param[Array<Integer, String>] flat array representation of
+    #     AbsoluteSuspendedTokens, consists of tuples with absolute position and
+    #     contents each.
     #     Example: [1,'a', 3,'bb']
     # @return[AbsoluteSuspendedTokens]
     def self.from_flat(flat)

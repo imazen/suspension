@@ -16,13 +16,13 @@ module Suspension
       @tokens_b = tokens_b || @tokens_a
     end
 
-    # Returns a document that replaces `synced_token_names` in `doc_b_text`
+    # Returns a document that replaces `replaced_token_names` in `doc_b_text`
     # based on where they are located in `doc_a_tokens`. Retains all
-    #{ }`doc_b_text`'s other tokens that are not in `synced_token_names`.
-    # @param[Array<Symbol>] synced_token_names an Array of token names to be
+    # `doc_b_text`'s other tokens that are not in `replaced_token_names`.
+    # @param[Array<Symbol>] replaced_token_names an Array of token names to be
     #     replaced.
     # @return[String] document with replaced tokens
-    def replace(synced_token_names)
+    def replace(replaced_token_names)
       # Suspend both texts
       token_authority = Suspender.new(doc_a_tokens, tokens_a).suspend
       text_authority = Suspender.new(doc_b_text, tokens_b).suspend
@@ -30,14 +30,14 @@ module Suspension
         raise ArgumentError, "Filtered text does not match. Run replay to->from first"
       end
 
-      # Remove 'synced_token_names' from 'doc_b_text', replacing them with tokens
+      # Remove 'replaced_token_names' from 'doc_b_text', replacing them with tokens
       # from 'doc_a_tokens'.
       retained_tokens = text_authority \
                             .suspended_tokens \
-                            .reject { |t| synced_token_names.include?(t.name) }
-      updated_tokens = token_authority \
-                          .suspended_tokens \
-                          .select { |t| synced_token_names.include?(t.name) }
+                            .select { |t| !replaced_token_names.include?(t.name) }
+      updated_tokens  = token_authority \
+                            .suspended_tokens \
+                            .select { |t| replaced_token_names.include?(t.name) }
       # Sort the tokens correctly so they can be applied
       new_tokens = AbsoluteSuspendedTokens.new(
         retained_tokens + updated_tokens

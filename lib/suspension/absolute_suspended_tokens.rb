@@ -8,14 +8,14 @@ module Suspension
     #     [[-1, "a"], [0, "ab"], [-1, "b"], [1, "x"], [0, "ccnn"], [1, "e"]]
     # @return[AbsoluteSuspendedTokens] a copy of self, adjustd for diff
     def adjust_for_diff(diff)
-      adjusted_for_deletions(DiffExtractor.extract_deletions(diff)) \
-          .adjusted_for_insertions(DiffExtractor.extract_insertions(diff))
+      adjust_for_deletions(DiffExtractor.extract_deletions(diff)) \
+          .adjust_for_insertions(DiffExtractor.extract_insertions(diff))
     end
 
     # Returns copy of self, adjusted for deletions
     # @param[Array<Array>] deletions as as array of start/end pairs: [[0,3], [8,12], ...]
     # @param[AbsoluteSuspendedTokens] a copy of self, adjusted for deletions
-    def adjusted_for_deletions(deletions)
+    def adjust_for_deletions(deletions)
       assert_ordered_list_of_start_end_pairs(deletions)
       AbsoluteSuspendedTokens.new(
         map { |token|
@@ -37,7 +37,7 @@ module Suspension
     # @param[Array<Array>] insertions as array of start/end pairs: [[0,3], [8,12], ...]
     # @param[Symbol] affinity, one of :left, :right
     # @param[AbsoluteSuspendedTokens] a copy of self, adjusted for insertions
-    def adjusted_for_insertions(insertions, affinity = :left)
+    def adjust_for_insertions(insertions, affinity = :left)
       assert_ordered_list_of_start_end_pairs(insertions)
       unless [:left, :right].include?(affinity)
         raise "Unrecognized affinity value #{ affinity.inspect }"
@@ -87,7 +87,8 @@ module Suspension
       self
     end
 
-    # Returns copy of self with entries sorted stabily
+    # Returns copy of self with entries sorted by position, retaining the current
+    # sort order for items with the same position.
     # @return[AbsoluteSuspendedTokens] sorted copy of self with secondary sorting key
     #                         for suspended_tokens with identical position
     def stable_sort
@@ -98,6 +99,8 @@ module Suspension
   private
 
     # Raises exception if diff_list doesn't meet expectations:
+    # * all items are tuples
+    # * all start/end positions are in ascending order
     # [[0,3], [8,12], ...]
     def assert_ordered_list_of_start_end_pairs(diff_list)
       if(
