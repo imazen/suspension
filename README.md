@@ -49,4 +49,30 @@ or just run a single spec file:
 
 ## Diagrams
 
+### Repositext tokens overview
+
 [![Repositext tokens](https://raw.github.com/imazen/suspension/master/doc/images/rt_tokens.png)](https://raw.github.com/imazen/suspension/master/doc/images/rt_tokens.png)
+
+### Workflow: Sync text changes from PT to AT
+
+Retaining repositext tokens in AT.
+
+[![Repositext tokens](https://raw.github.com/imazen/suspension/master/doc/images/rt_wf_sync_text_changes_from_pt_to_at.png)](https://raw.github.com/imazen/suspension/master/doc/images/rt_wf_sync_text_changes_from_pt_to_at.png)
+
+### Workflow: Sync subtitle_marks from ST to AT
+
+Retaining plain text and other repositext tokens in AT.
+
+[![Repositext tokens](https://raw.github.com/imazen/suspension/master/doc/images/rt_wf_sync_subtitle_marks_from_st_to_at.png)](https://raw.github.com/imazen/suspension/master/doc/images/rt_wf_sync_subtitle_marks_from_st_to_at.png)
+
+### Workflow: Convert AT to PT
+
+Retaining kramdown-subset tokens, discarding at-specific tokens.
+
+[![Repositext tokens](https://raw.github.com/imazen/suspension/master/doc/images/rt_wf_convert_at_to_pt.png)](https://raw.github.com/imazen/suspension/master/doc/images/rt_wf_convert_at_to_pt.png)
+
+### Workflow: Sync record tokens from AT V2 to AT V1
+
+Retaining all other tokens in AT V1.
+
+[![Repositext tokens](https://raw.github.com/imazen/suspension/master/doc/images/rt_wf_sync_record_tokens_from_at_to_at.png)](https://raw.github.com/imazen/suspension/master/doc/images/rt_wf_sync_record_tokens_from_at_to_at.png)
