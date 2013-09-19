@@ -49,4 +49,4 @@ or just run a single spec file:
 
 ## Diagrams
 
-[![Repositext tokens](docs/images/rt_tokens.png)](docs/images/rt_tokens.png)
+[![Repositext tokens](https://raw.github.com/imazen/suspension/master/doc/images/rt_tokens.png)](https://raw.github.com/imazen/suspension/master/doc/images/rt_tokens.png)
