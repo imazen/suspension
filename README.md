@@ -46,3 +46,7 @@ or just run a single spec file:
 
 		suspend import offset-file text-file, to-file
 		Merges the offset and text file
+
+## Diagrams
+
+[![Repositext tokens](docs/images/rt_tokens.png)](docs/images/rt_tokens.png)
