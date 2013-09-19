@@ -6,24 +6,6 @@ module Suspension
 
     describe "extract_deletions" do
 
-      it "raises when given diff_match_patch_list with invalid segment_type" do
-        lambda {
-          DiffExtractor.extract_deletions([nil,'a'], -1)
-        }.must_raise(ArgumentError)
-      end
-
-      it "raises when given diff_match_patch_list with invalid text" do
-        lambda {
-          DiffExtractor.extract_deletions([-1,nil], -1)
-        }.must_raise(ArgumentError)
-      end
-
-      it "raises when given invalid segment_type" do
-        lambda {
-          DiffExtractor.extract_deletions([-1,'a'], 'invalid')
-        }.must_raise(ArgumentError)
-      end
-
       it "extracts simple deletion" do
         DiffExtractor.extract_deletions(
           [[-1,'aa']]
@@ -86,6 +68,28 @@ module Suspension
         DiffExtractor.extract_insertions(
           [[0,'aa'], [1, 'bb'], [0, 'cc'], [1,'dd']]
         ).must_equal [[2,4], [6,8]]
+      end
+
+    end
+
+    describe "convert_diff_match_patch" do
+
+      it "raises when given diff_match_patch_list with invalid segment_type" do
+        lambda {
+          DiffExtractor.extract_deletions([nil,'a'], -1)
+        }.must_raise(ArgumentError)
+      end
+
+      it "raises when given diff_match_patch_list with invalid text" do
+        lambda {
+          DiffExtractor.extract_deletions([-1,nil], -1)
+        }.must_raise(ArgumentError)
+      end
+
+      it "raises when given invalid segment_type" do
+        lambda {
+          DiffExtractor.extract_deletions([-1,'a'], 'invalid')
+        }.must_raise(ArgumentError)
       end
 
     end
