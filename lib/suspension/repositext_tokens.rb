@@ -32,6 +32,11 @@ module Suspension
   LINK_URL_ANY_CHARS = /\\\)|[^\)]/
 
   # Initialize tokens with :name, :regex, :must_be_start_of_line, :is_plain_text
+  PLAIN_TEXT_TOKENS = [
+    [:pt_lines, /[\w \.\;\-\!\?]+/, false, true],
+    [:pt_blank_lines, /\n\n+/, false, true]
+  ].map { |e| Token.new(*e) }
+
   AT_SPECIFIC_TOKENS = [
     [:gap_mark, /%/],
     [:record, /\^\^\^\s*?\n?#{IAL}?\s*?\n/, true],
@@ -50,6 +55,8 @@ module Suspension
     [:image, /!\[#{LINK_TEXT_ANY_CHARS}+\]\(#{LINK_URL_ANY_CHARS}*?\)/]
   ].map { |e| Token.new(*e) }
 
-  REPOSITEXT_TOKENS = AT_SPECIFIC_TOKENS + KRAMDOWN_SUBSET_TOKENS
+  # Order the tokens so that most common regexes are first to improve performance
+  # of Suspender.suspend where we iterate over all tokens until we find a match.
+  REPOSITEXT_TOKENS = PLAIN_TEXT_TOKENS + AT_SPECIFIC_TOKENS + KRAMDOWN_SUBSET_TOKENS
 
 end

@@ -6,7 +6,8 @@ module Suspension
     attr_reader :suspended_tokens # any tokens suspended from original_doc
 
     # @param[String] original_doc document that contains tokens to be suspended
-    # @param[Array<Token>] token_library an array of tokens to suspend
+    # @param[Array<Token>] token_library an array of tokens to suspend.
+    #     Suspension::REPOSITEXT_TOKENS is an example.
     def initialize(original_doc, token_library)
       @original_doc = original_doc
       @token_library = token_library
@@ -33,12 +34,12 @@ module Suspension
         no_match = true
         active_tokens.each { |token|
           if (!token.must_be_start_of_line || s.beginning_of_line?) && (contents = s.scan(token.regex))
+            no_match = false
             if token.is_plaintext
               @filtered_text += contents
               token_start += contents.length
             else
               @suspended_tokens << SuspendedToken.new(token_start, token.name, contents)
-              no_match = false
               break
             end
           end
