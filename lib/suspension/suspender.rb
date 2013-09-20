@@ -46,7 +46,7 @@ module Suspension
         }
         if no_match
           ch = s.getch # Is a multi-byte character counted as length=1?
-          @filtered_text += ch
+          @filtered_text << ch
           token_start += ch.length
         end
       end
