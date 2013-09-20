@@ -2,7 +2,7 @@ require_relative 'helper'
 
 module Suspension
 
-  describe 'REPOSITEXT_TOKENS' do
+  describe 'REPOSITEXT_TOKENS regex parsing' do
 
     # Helper to test token regexes. Asserts that REPOSITEXT_TOKEN with
     # token_name will consume test_string in its entirety.
@@ -70,7 +70,20 @@ module Suspension
       end
     end
 
-    describe "extension" do
+    describe "extension_block" do
+      [
+        "{::comment}\nBlock comment extension\n{:/comment}\n",
+        "{::comment} Span comment extension {:/comment}\n",
+        "{::options key=\"val\" /}\n",
+        "{::nomarkdown}This *is* not processed{:/nomarkdown}\n"
+      ].each do |test_string|
+        it "parses '#{ test_string.inspect }'" do
+          token_must_parse_string(:extension_block, test_string)
+        end
+      end
+    end
+
+    describe "extension_span" do
       [
         "{::comment}\nBlock comment extension\n{:/comment}",
         "{::comment} Span comment extension {:/comment}",
@@ -78,7 +91,7 @@ module Suspension
         "{::nomarkdown}This *is* not processed{:/nomarkdown}"
       ].each do |test_string|
         it "parses '#{ test_string.inspect }'" do
-          token_must_parse_string(:extension, test_string)
+          token_must_parse_string(:extension_span, test_string)
         end
       end
     end
@@ -92,7 +105,7 @@ module Suspension
     end
 
     describe "header_id" do
-      ['{#id}'].each do |test_string|
+      [' {#id}'].each do |test_string|
         it "parses '#{ test_string.inspect }'" do
           token_must_parse_string(:header_id, test_string)
         end
@@ -115,10 +128,18 @@ module Suspension
       end
     end
 
-    describe "ial" do
-      ["{: #ial}", "{:.rid}\n"].each do |test_string|
+    describe "ial_block" do
+      ["{: #ial}\n", "{:.rid}\n"].each do |test_string|
         it "parses '#{ test_string.inspect }'" do
-          token_must_parse_string(:ial, test_string)
+          token_must_parse_string(:ial_block, test_string)
+        end
+      end
+    end
+
+    describe "ial_span" do
+      ["{: #ial}", "{:.rid}"].each do |test_string|
+        it "parses '#{ test_string.inspect }'" do
+          token_must_parse_string(:ial_span, test_string)
         end
       end
     end

@@ -10,6 +10,16 @@ require 'suspension'
 
 module Suspension
 
+  class Random
+    def self.word(options = {})
+      options = {
+        :prefix => '',
+        :suffix => ''
+      }.merge(options)
+      "#{ options[:prefix] }gjhf#{ options[:suffix] }"
+    end
+  end
+
   class AbsoluteSuspendedTokens
 
     # Instantiates new instance of self from flat array of token tuples.
