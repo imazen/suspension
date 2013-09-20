@@ -75,7 +75,7 @@ module Suspension
     [:ald, ALD, true],
     [:header_atx, /\#{1,6}/, true],
     [:header_id, /\s\{\##{ALD_ID_NAME}\}/], # Spec requires at least one leading space
-    [:header_setext, /(-|=)+#{SPACES_NEWLINE}/, true],
+    [:header_setext, /#{OPT_SPACE}(-|=)+#{SPACES_NEWLINE}/, true],
     [:image, /!\[#{LINK_TEXT_ANY_CHARS}+\]\(#{LINK_URL_ANY_CHARS}*?\)/]
   ].map { |e| Token.new(*e) }
 
