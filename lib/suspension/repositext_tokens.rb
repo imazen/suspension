@@ -2,8 +2,35 @@ require 'suspension/token'
 
 module Suspension
 
-  # Notes
-  # =====
+  # This module specifies the tokens that can be suspended from a document.
+  #
+  # Each token has the following attributes:
+  #
+  # * :name - the name of the token so that we can reason about it.
+  # * :regex - the regex that will be used by StringScanner to consume a token.
+  # * :must_be_start_of_line - set to true if the token must be located at the
+  #   start of a line. We use this in lieu of '^' since it doesn't work with
+  #   StringScanner.
+  # * :is_plain_text - set to true if the match is considered plain text and
+  #   should be added to filtered_text, rather than suspended. This feature
+  #   exists for performance reasons only so that we can match long runs of
+  #   plain text in StringScanner, rather than taking one character at a time
+  #   if none of the other tokens matches.
+  #
+  # Order of tokens
+  # ---------------
+  #
+  # The following factors determine the order of REPOSITEXT_TOKENS:
+  #
+  # 1. regex specificity - put a more specific regex before a more general regex
+  #    if the more general regex would match a string that should be parsed by
+  #    the more specific one.
+  # 2. Suspender#suspend performance - when we suspend a document, we iterate
+  #    over all REPOSITEXT_TOKENS at every StringScanner match. We can increase
+  #    performance if we put more common tokens first, so that we don't have
+  #    to iterate over as many tokens.
+  # 3. Given everything else is equal, we sort tokens alphabetically by their
+  #    name.
   #
   # Beginning of line works differently in StringScanner
   # ----------------------------------------------------
@@ -18,19 +45,19 @@ module Suspension
   # Consumption of trailing whitespace
   # ----------------------------------
   #
-  # * Block tokens consume any trailing whitespace up to and including the final
-  #   new line.
+  # The following conventions apply for consuming trailing whitespace:
+  #
+  # * Block tokens consume any trailing whitespace up to and including the final new line.
   # * Span tokens don't consume any trailing whitespace
 
-  # Regex helpers
-  # INDENT = /^(?:\t| {4})/
-  OPT_SPACE = / {0,3}/ # Regexp for matching the optional space (zero to three spaces)
-  SPACES_NEWLINE = /\s*?\n/ # matches optional spaces + a newline
+  # INDENT = /^(?:\t| {4})/ # We may need this if we support more kramdown features
+  OPT_SPACE = / {0,3}/ # Regexp for matching optional space (zero to three spaces). Typically used at the start of a line.
+  BLOCK_LINE_END = /\s*?\n/ # matches optional spaces + a newline. Typically used at the end of a block token.
 
   ALD_ANY_CHARS = /\\\}|[^\}]/
   ALD_ID_CHARS = /[\w-]/
   ALD_ID_NAME = /\w#{ALD_ID_CHARS}*/
-  ALD = /#{OPT_SPACE}\{:(#{ALD_ID_NAME}):(#{ALD_ANY_CHARS}+)\}#{SPACES_NEWLINE}/ # called ALD_START in kramdown
+  ALD = /#{OPT_SPACE}\{:(#{ALD_ID_NAME}):(#{ALD_ANY_CHARS}+)\}#{BLOCK_LINE_END}/ # called ALD_START in kramdown
 
   EXT_START = /\{::(comment|nomarkdown|options)#{ALD_ANY_CHARS}*?/
   EXT_WITH_BODY = /#{EXT_START}\}#{ALD_ANY_CHARS}*?\{:\/\1?\}/
@@ -43,7 +70,6 @@ module Suspension
   LINK_TEXT_ANY_CHARS = /\\\]|[^\]]/
   LINK_URL_ANY_CHARS = /\\\)|[^\)]/
 
-  # Initialize tokens with :name, :regex, :must_be_start_of_line, :is_plain_text
   # Keep this set as small as possible to make it easy to reason about.
   # Don't consume any trailing whitespace to avoid interference with token regexes
   PLAIN_TEXT_TOKENS = [
@@ -52,7 +78,7 @@ module Suspension
 
   AT_SPECIFIC_TOKENS = [
     [:gap_mark, /%/],
-    [:record, /\^\^\^\s*?\n?#{IAL}?#{SPACES_NEWLINE}/, true], # Note: the first \s*?\n? can't be replaced with SPACES_NEWLINE since space and \n are independent in this case.
+    [:record, /\^\^\^\s*?\n?#{IAL}?#{BLOCK_LINE_END}/, true], # Note: the first \s*?\n? can't be replaced with BLOCK_LINE_END since space and \n are independent in this case.
     [:subtitle_mark, /@/]
   ].map { |e| Token.new(*e) }
 
@@ -64,23 +90,21 @@ module Suspension
     # Define extension_block before extension_span since it is more specific
     # We define both so that we can consume trailing whitespace on block according
     # to conventions.
-    # Note on block: can't use any parentheses to remove SPACES_NEWLINE duplication
+    # Note on block: can't use any parentheses to remove BLOCK_LINE_END duplication
     # since that would break the \1 backreference in EXT_WITH_BODY
-    [:extension_block, /#{EXT_WITH_BODY}#{SPACES_NEWLINE}|#{EXT_WITHOUT_BODY}#{SPACES_NEWLINE}/, true],
+    [:extension_block, /#{EXT_WITH_BODY}#{BLOCK_LINE_END}|#{EXT_WITHOUT_BODY}#{BLOCK_LINE_END}/, true],
     [:extension_span, /#{EXT_WITH_BODY}|#{EXT_WITHOUT_BODY}/],
     # Define ial_block before ial_span since it is more specific
-    [:ial_block, /#{IAL}#{SPACES_NEWLINE}/, true],
+    [:ial_block, /#{IAL}#{BLOCK_LINE_END}/, true],
     [:ial_span, /#{IAL}/],
     # sorted alphabetically
     [:ald, ALD, true],
     [:header_atx, /\#{1,6}/, true],
     [:header_id, /\s\{\##{ALD_ID_NAME}\}/], # Spec requires at least one leading space
-    [:header_setext, /#{OPT_SPACE}(-|=)+#{SPACES_NEWLINE}/, true],
+    [:header_setext, /#{OPT_SPACE}(-|=)+#{BLOCK_LINE_END}/, true],
     [:image, /!\[#{LINK_TEXT_ANY_CHARS}+\]\(#{LINK_URL_ANY_CHARS}*?\)/]
   ].map { |e| Token.new(*e) }
 
-  # Order the tokens so that most common regexes are first to improve performance
-  # of Suspender.suspend where we iterate over all tokens until we find a match.
   REPOSITEXT_TOKENS = PLAIN_TEXT_TOKENS + AT_SPECIFIC_TOKENS + KRAMDOWN_SUBSET_TOKENS
 
 end

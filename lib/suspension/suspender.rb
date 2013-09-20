@@ -28,7 +28,6 @@ module Suspension
       @suspended_tokens = AbsoluteSuspendedTokens.new
       token_start = 0
       @filtered_text = ""
-
       s = StringScanner.new(@original_doc)
       while !s.eos? do
         no_match = true
@@ -46,6 +45,11 @@ module Suspension
         }
         if no_match
           ch = s.getch # Is a multi-byte character counted as length=1?
+          # The fastest way of building a string in Ruby is to use the :<<
+          # operator. (compared to String#+ and StringIO#<<)
+          # See here for benchmarks:
+          # * http://blog.codahale.com/2006/04/18/ever-wonder-which-is-the-fastest-way-to-concatenate-strings-in-ruby/
+          # * http://stackoverflow.com/a/13276313/130830
           @filtered_text << ch
           token_start += ch.length
         end
