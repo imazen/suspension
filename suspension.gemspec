@@ -21,8 +21,9 @@ Gem::Specification.new do |s|
 
   s.add_dependency('diff_match_patch')
   #s.add_dependency('diff_match_patch_native')
+  s.add_dependency('repositext-kramdown')
 
-  
+
   # Test libraries
   s.add_development_dependency('rake')
   s.add_development_dependency('minitest')
