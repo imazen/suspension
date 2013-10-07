@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.name        = "suspension"
   s.version     = '0.0.1'
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["Nathanael Jones"]
+  s.authors     = ["Nathanael Jones", "Jo Hund"]
   s.email       = ["nathanael.jones@gmail.com"]
   s.homepage    = "http://github.com/imazen/suspension"
   s.summary     = %q{Enabling cross-format merging through token suspension}
@@ -19,9 +19,9 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
 
-  s.add_dependency('diff_match_patch')
-  #s.add_dependency('diff_match_patch_native')
-  s.add_dependency('repositext-kramdown')
+  s.add_runtime_dependency('diff_match_patch')
+  #s.add_runtime_dependency('diff_match_patch_native')
+  s.add_runtime_dependency('repositext-kramdown')
 
 
   # Test libraries
