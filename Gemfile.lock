@@ -1,12 +1,3 @@
-GIT
-  remote: https://github.com/imazen/at-kramdown
-  revision: df148b0338063f736f403b7be9a693ea55ff0981
-  specs:
-    repositext-kramdown (0.0.1)
-      kramdown
-      nokogiri
-      rubyzip
-
 PATH
   remote: .
   specs:
@@ -14,9 +5,19 @@ PATH
       diff_match_patch
       repositext-kramdown
 
+PATH
+  remote: ../repositext-kramdown
+  specs:
+    repositext-kramdown (0.0.1)
+      builder
+      kramdown
+      nokogiri
+      rubyzip
+
 GEM
   remote: http://rubygems.org/
   specs:
+    builder (3.2.2)
     diff_match_patch (0.1.0)
     kramdown (1.2.0)
     mini_portile (0.5.1)
