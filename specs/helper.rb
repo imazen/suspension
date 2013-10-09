@@ -1,12 +1,13 @@
 # infrastructure
 require 'rubygems'
+require 'minitest'
 require 'minitest/autorun'
 
 # add lib dir to LOAD_PATH in case we run specs outside of Rake
-$LOAD_PATH << File.join(File.dirname(__FILE__), '..', 'lib')
+# $LOAD_PATH << File.join(File.dirname(__FILE__), '..', 'lib')
 
 # code under test
-require 'suspension'
+require_relative '../lib/suspension'
 
 module Suspension
 
