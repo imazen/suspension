@@ -1,0 +1,12 @@
+#!/usr/bin/env ruby
+# -*- encoding: utf-8 -*-
+
+require 'kramdown/document'
+require 'suspension'
+
+filename = ARGV.shift
+contents = File.read(filename)
+
+new_contents = Suspension::TokenRemover.new(contents, Suspension::REPOSITEXT_TOKENS).remove
+
+File.open(filename + ".txt",'w') {|f| f.write(new_contents)}
