@@ -15,4 +15,4 @@ contents_b = Suspension::TokenRemover.new(contents_b, Suspension::REPOSITEXT_TOK
 
 da = Suspension::DiffAlgorithm.new 
 
-puts da.call(contents_a, contents_b)
+puts da.call(contents_a, contents_b).select{|e| e[0] != 0}.map{|e| (e[0] == -1 ? "\n-" : "\n+") + e[1] }
