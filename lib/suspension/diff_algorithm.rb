@@ -26,7 +26,14 @@ module Suspension
       # [[:delete, "a"], [:equal, "ab"], [:delete, "b"], [:insert, "x"], [:equal, "ccnn"], [:insert, "e"]]
       # to
       # [[-1, "a"], [0, "ab"], [-1, "b"], [1, "x"], [0, "ccnn"], [1, "e"]]
-      DiffMatchPatch.new.diff_main(a,b).map { |e|
+      dmp = DiffMatchPatch.new
+
+      dmp.diff_timeout = 0
+      dmp.diff_edit_cost = 10 if dmp.respond_to? :diff_edit_cost
+      dmp.diff_editCost = 10 if dmp.respond_to? :diff_editCost
+
+
+      dmp.diff_main(a,b,false).map { |e|
         [SYM_TO_INT_MAP[e[0]], e[1]]
       }
     end
