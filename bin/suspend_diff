@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+# -*- encoding: utf-8 -*-
+
+require 'kramdown/document'
+require 'suspension'
+
+file_a = ARGV.shift
+file_b = ARGV.shift
+contents_a = File.read(file_a)
+contents_b = File.read(file_b)
+
+contents_a = Suspension::TokenRemover.new(contents_a, Suspension::REPOSITEXT_TOKENS).remove
+contents_b = Suspension::TokenRemover.new(contents_b, Suspension::REPOSITEXT_TOKENS).remove
+
+
+da = Suspension::DiffAlgorithm.new 
+
+puts da.call(contents_a, contents_b)
