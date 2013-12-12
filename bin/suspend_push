@@ -7,9 +7,14 @@ require 'suspension'
 from_file = ARGV.shift
 to_file = ARGV.shift
 
-from = Suspender.new(File.read(from_file),Suspension::REPOSITEXT_TOKENS).suspend
-to = Suspender.new(File.read(to_file),Suspension::REPOSITEXT_TOKENS).suspend
-diff = diff_main(from.filtered_text, to.filtered_text)
-adjusted_tokens = to.suspended_tokens.adjust_for_diff(diff)
-result_text = Unsuspender.new(from.filtered_text,adjusted_tokens).restore
-File.open(to_file, 'w') { |file| file.write(result_text) }
+from_contents = File.read(from_file)
+to_contents = File.read(to_file)
+
+updated_from_text = Suspension::TextReplayer.new(to_contents,from_contents).replay
+File.open(from_file + ".updated.txt",'w') {|file| file.write(updated_from_text)}
+
+
+updated = Suspension::TokenReplacer.new(updated_from_text, to_contents).replace([:subtitle_mark])
+
+
+File.open(to_file, 'w') { |file| file.write(updated) }
