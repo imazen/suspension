@@ -36,6 +36,14 @@ module Suspension
         tokens([5,"@",8,"@"]).adjust_for_deletions([[0,2],[4,5]]).validate.to_flat \
                              .must_equal [2,"@",5,"@"]
       end
+
+      it "considers prior deletions when deciding if a later deletion should adjust position" do
+        tokens(
+          [10,"@"]
+        ).adjust_for_deletions(
+          [[1,5], [8,9]]
+        ).validate.to_flat.must_equal [5,"@"]
+      end
     end
 
     describe "adjust_for_insertions" do
@@ -45,7 +53,7 @@ module Suspension
 
       it "adjusts subsequent tokens" do
         tokens([1,"@",3,"@"]).adjust_for_insertions([[0,2],[2,5]]).validate.to_flat \
-                             .must_equal [3,"@",8,"@"]
+                             .must_equal [6,"@",8,"@"]
       end
 
       it "adjusts touching tokens for affinity=:left" do
@@ -56,6 +64,14 @@ module Suspension
       it "adjusts touching tokens for affinity=:right" do
         tokens([1,"@"]).adjust_for_insertions([[1,3]], :right).validate.to_flat \
                        .must_equal [3,"@"]
+      end
+
+      it "considers prior insertions when deciding if a later insertion should adjust position" do
+        tokens(
+          [16,"@"]
+        ).adjust_for_insertions(
+          [[1,5], [18,22]]
+        ).validate.to_flat.must_equal [24,"@"]
       end
     end
 

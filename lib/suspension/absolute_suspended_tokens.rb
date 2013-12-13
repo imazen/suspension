@@ -47,9 +47,12 @@ module Suspension
           token = token.dup
           # Accumulate all insertions prior to (or overlapping) the token
           token.position += insertions.reduce(0) { |pos_offset, ins|
+            # Update ref_pos so that we can include insertions that would prior
+            # to adjustment be after token.position.
+            ref_pos = token.position + pos_offset
             if(
-              (affinity == :left && ins[0] < token.position) || \
-              (affinity == :right && ins[0] <= token.position)
+              (affinity == :left && ins[0] < ref_pos) || \
+              (affinity == :right && ins[0] <= ref_pos)
             )
               pos_offset + ins[1] - ins[0]
             else
