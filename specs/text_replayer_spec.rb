@@ -9,7 +9,7 @@ module Suspension
         "aabxccnne",
         "aabb@ccnn%@",
         [Token.new(:a, /@/), Token.new(:b, /%/)]
-      ).replay.must_equal "aab@xccnn%@e"
+      ).replay.must_equal "aabx@ccnne%@"
     end
 
     describe 'Regressions' do

@@ -37,13 +37,13 @@ module Suspension
     # @param[Array<Array>] insertions as array of start/end pairs: [[0,3], [8,12], ...]
     # @param[Symbol] affinity, one of :left, :right
     # @param[AbsoluteSuspendedTokens] a copy of self, adjusted for insertions
-    def adjust_for_insertions(insertions, affinity = :left)
+    def adjust_for_insertions(insertions, affinity = :right)
       assert_ordered_list_of_start_end_pairs(insertions)
       unless [:left, :right].include?(affinity)
         raise "Unrecognized affinity value #{ affinity.inspect }"
       end
       AbsoluteSuspendedTokens.new(
-        self.map { |token|
+        map { |token|
           token = token.dup
           # Accumulate all insertions prior to (or overlapping) the token
           token.position += insertions.reduce(0) { |pos_offset, ins|
