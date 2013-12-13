@@ -36,6 +36,12 @@ module Suspension
         ).must_equal [[2,4], [6,8]]
       end
 
+      it "handles multibyte characters" do
+        DiffExtractor.extract_deletions(
+          [[0,'à…'], [-1,'à…'], [0,'à…'], [-1,'à…']]
+        ).must_equal [[2,4], [6,8]]
+      end
+
     end
 
     describe "extract_insertions" do

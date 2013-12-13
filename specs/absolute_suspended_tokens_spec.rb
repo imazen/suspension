@@ -18,6 +18,12 @@ module Suspension
                               .validate.to_flat \
                               .must_equal [0,"@",6,"%"]
       end
+
+      it "handles strings with multibyte characters" do
+        tokens([1,"@", 5,'%']).adjust_for_diff([[-1,"…"], [0,"éù"], [1,'èè']]) \
+                              .validate.to_flat \
+                              .must_equal [0,"@",6,"%"]
+      end
     end
 
     describe "adjust_for_deletions" do

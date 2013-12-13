@@ -9,7 +9,7 @@ module Suspension
     end
 
     def longseq
-      rel_tokens([0,"a", 5,"bb\r\nb", 0,"cc\tc", 0,"dd\"d", 1,"ff,f"])
+      rel_tokens([0,"a…", 5,"bb\r\nb", 0,"cc\tc", 0,"dd\"d", 1,"ff,f"])
     end
 
     it "converts to and from absolute form" do
@@ -22,7 +22,7 @@ module Suspension
 
     it "serializes in tab-delimited form with correct escaping" do
       longseq.serialize.must_equal [
-        "0\tmark\ta\n",
+        "0\tmark\ta…\n",
         "5\tmark\t\"bb\r\nb\"\n",
         "0\tmark\t\"cc\tc\"\n",
         "0\tmark\t\"dd\"\"d\"\n",

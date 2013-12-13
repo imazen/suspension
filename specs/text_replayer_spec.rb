@@ -12,6 +12,18 @@ module Suspension
       ).replay.must_equal "aab@xccnn%@e"
     end
 
+    describe 'Regressions' do
+
+      it "handles multibyte characters" do
+        TextReplayer.new(
+          "aaèxéùà…e",
+          "aaè@éùà…%@",
+          [Token.new(:a, /@/), Token.new(:b, /%/)]
+        ).replay.must_equal "aaèx@éùà…e%@"
+      end
+
+    end
+
   end
 
 end

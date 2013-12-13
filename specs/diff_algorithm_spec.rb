@@ -35,6 +35,10 @@ module Suspension
         DiffAlgorithm.new.call('', 'a').must_equal [[1, "a"]]
       end
 
+      it "handles strings with multibyte characters" do
+        DiffAlgorithm.new.call('', 'à').must_equal [[1, "à"]]
+      end
+
     end
 
   end

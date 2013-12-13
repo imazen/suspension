@@ -44,6 +44,14 @@ module Suspension
       ).replace([:record]).must_equal "lorem ipsum\n\n%dolor sit amet\n\n^^^\n%consectetur adipisicing."
     end
 
+    it "handles multibyte characters" do
+      TokenReplacer.new(
+        "èì—éù@ùà…@",
+        "èì—@éùùà…%",
+        [Token.new(:a, /@/), Token.new(:b, /%/)]
+      ).replace([:a]).must_equal "èì—éù@ùà…@%"
+    end
+
   end
 
 end
