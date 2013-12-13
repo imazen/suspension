@@ -19,8 +19,8 @@ module Suspension
       @diff_algorithm = diff_algorithm || DiffAlgorithm.new
     end
 
-    # Returns a document that contains doc_b_tokens's filtered_text and doc_a_text's
-    # tokens.
+    # Returns a document that contains doc_b_tokens' tokens and doc_a_text's
+    # filtered_text.
     def replay
       text_authority = Suspender.new(doc_a_text, tokens_a).suspend
       token_authority = Suspender.new(doc_b_tokens, tokens_b).suspend

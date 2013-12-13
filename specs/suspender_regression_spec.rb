@@ -21,6 +21,11 @@ module Suspension
             .must_equal [0,"**", 0,"*"]
       end
 
+      it "handles escaped brackets" do
+        Suspender.new("a@ \\[ed\\] b@", REPOSITEXT_TOKENS).suspend.suspended_tokens.to_flat \
+            .must_equal [1,"@", 10,"@"]
+      end
+
     end
   end
 end
