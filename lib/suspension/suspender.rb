@@ -35,7 +35,7 @@ module Suspension
           if (!token.must_be_start_of_line || s.beginning_of_line?) && (contents = s.scan(token.regex))
             no_match = false
             if token.is_plaintext
-              @filtered_text += contents
+              @filtered_text << contents
               token_start += contents.length
             else
               @suspended_tokens << SuspendedToken.new(token_start, token.name, contents)
