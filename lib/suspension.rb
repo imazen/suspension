@@ -8,6 +8,7 @@ module Suspension; end
 require 'suspension/absolute_suspended_tokens'
 require 'suspension/diff_algorithm'
 require 'suspension/diff_extractor'
+require 'suspension/errors'
 require 'suspension/relative_suspended_tokens'
 require 'suspension/repositext_tokens'
 require 'suspension/suspended_token'

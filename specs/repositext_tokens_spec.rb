@@ -10,7 +10,7 @@ module Suspension
     # @param[String] test_string the test string
     def token_must_parse_string(token_name, test_string)
       token = get_token(token_name)
-      raise(ArgumentError, "Invalid token_name: #{ token_name.inspect }") unless token
+      raise(InvalidTokenNameError, "Invalid token_name: #{ token_name.inspect }") unless token
       StringScanner.new(test_string).scan(token.regex).must_equal(test_string)
     end
 

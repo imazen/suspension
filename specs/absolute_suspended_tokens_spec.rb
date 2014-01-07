@@ -85,7 +85,7 @@ module Suspension
       it "raises when given items that are not of type SuspendedToken" do
         lambda {
           AbsoluteSuspendedTokens.new([1,2,3]).validate
-        }.must_raise ArgumentError
+        }.must_raise TokenTypeError
       end
 
       it "raises when given items that are not in ascending order" do
@@ -93,7 +93,7 @@ module Suspension
           AbsoluteSuspendedTokens.new(
             [1,2,4,3].map{ |e| SuspendedToken.new(e, :a, 'a') }
           ).validate
-        }.must_raise ArgumentError
+        }.must_raise TokensNotAscendingError
       end
     end
 
@@ -120,7 +120,7 @@ module Suspension
             :adjust_for_deletions,
             [[0,3], [8,12], [1]]
           )
-        }.must_raise ArgumentError
+        }.must_raise StartEndPairsTypeError
       end
       it "raises when given diff_list that contains start/stop positions that are not in ascending order" do
         lambda {
@@ -128,7 +128,7 @@ module Suspension
             :adjust_for_deletions,
             [[0,3], [8,12], [11,14]]
           )
-        }.must_raise ArgumentError
+        }.must_raise TokensNotAscendingError
       end
     end
   end

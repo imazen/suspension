@@ -27,7 +27,7 @@ module Suspension
       token_authority = Suspender.new(doc_a_tokens, tokens_a).suspend
       text_authority = Suspender.new(doc_b_text, tokens_b).suspend
       if token_authority.filtered_text != text_authority.filtered_text
-        raise ArgumentError, "Filtered text does not match. Run replay to->from first"
+        raise FilteredTextMismatchError, "Filtered text does not match. Run replay to->from first"
       end
 
       # Remove 'replaced_token_names' from 'doc_b_text', replacing them with tokens

@@ -34,13 +34,13 @@ module Suspension
       dmp = diff_match_patch_list
       if dmp.any? { |p| !([-1,0,1].include?(p[0]) && p[1].is_a?(String)) }
         raise(
-          ArgumentError,
+          DmpNumberTextPairTypeError,
           "diff_match_patch_list must contain an array of number/text pairs. #{ dmp.inspect }"
         )
       end
       if ![-1,1].include?(segment_type)
         raise(
-          ArgumentError,
+          DmpSegmentTypeError,
           "segment_type must be one of -1 or 1. #{ segment_type.inspect }"
         )
       end
