@@ -34,7 +34,19 @@ module Suspension
 
 
       dmp.diff_main(a,b,false).map { |e|
-        [SYM_TO_INT_MAP[e[0]], e[1]]
+        # NOTE: The diff_match_patch_native library does not tag strings as UTF-8,
+        # so Ruby considers them to be ASCII-8BIT/BINARY encoded.
+        # Turns out that they are actually UTF-8 encoded, just improperly tagged.
+        # So for Suspension to work, we can use force_encoding since we know
+        # that the input strings were encoded in UTF-8.
+        utf8_encoded_string = if(Encoding::ASCII_8BIT == e[1].encoding)
+          # This string came from diff_match_patch_native, force encode to UTF-8
+          e[1].force_encoding("UTF-8")
+        else
+          # This string came from diff_match_patch (Ruby), leave as is
+          e[1]
+        end
+        [SYM_TO_INT_MAP[e[0]], utf8_encoded_string]
       }
     end
 
