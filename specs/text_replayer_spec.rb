@@ -14,7 +14,7 @@ module Suspension
 
     describe 'Regressions' do
 
-      it "description" do
+      it "handles sherlock" do
         doc_a_text = [
           "",
           "“Then, And good-night, Watson,”",
@@ -36,6 +36,28 @@ module Suspension
           ""
         ].join("\n")
         xpect = doc_b_tokens
+        result = Suspension::TextReplayer.new(doc_a_text, doc_b_tokens).replay
+        result.must_equal xpect
+      end
+
+      it "handles record ids" do
+        doc_a_text = [
+          "",
+          "Here is authoritative text",
+          ""
+        ].join("\n")
+        doc_b_tokens = [
+          "^^^{:.rid #f-65020019}",
+          "",
+          "Here is updatable text",
+          ""
+        ].join("\n")
+        xpect = [
+          "^^^{:.rid #f-65020019}",
+          "",
+          "Here is authoritative text",
+          ""
+        ].join("\n")
         result = Suspension::TextReplayer.new(doc_a_text, doc_b_tokens).replay
         result.must_equal xpect
       end

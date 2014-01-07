@@ -35,16 +35,20 @@ module Suspension
 
     # Returns copy of self, adjusted for insertions
     # @param[Array<Array>] insertions as array of start/end pairs: [[0,3], [8,12], ...]
-    # @param[Symbol] affinity, one of :left, :right
+    # @param[Symbol, optional] affinity, one of :left, :right, or reasonable default if nil.
     # @param[AbsoluteSuspendedTokens] a copy of self, adjusted for insertions
-    def adjust_for_insertions(insertions, affinity = :right)
+    def adjust_for_insertions(insertions, affinity = nil)
       assert_ordered_list_of_start_end_pairs(insertions)
-      unless [:left, :right].include?(affinity)
+      unless [:left, :right, nil].include?(affinity)
         raise "Unrecognized affinity value #{ affinity.inspect }"
       end
       AbsoluteSuspendedTokens.new(
         map { |token|
           token = token.dup
+          # Set affinity depending on token type. Most work better with :right,
+          # however some require :left.
+          # TODO: Should we make affinity a property of REPOSITEXT_TOKENS?
+          affinity ||= [:record].include?(token.name) ? :left : :right
           # Accumulate all insertions prior to (or overlapping) the token
           token.position += insertions.reduce(0) { |pos_offset, ins|
             # Update ref_pos so that we can include insertions that would prior
