@@ -110,12 +110,16 @@ module Suspension
     # * all start/end positions are in ascending order
     # [[0,3], [8,12], ...]
     def assert_ordered_list_of_start_end_pairs(diff_list)
-      if(
-        diff_list.any? { |a| a.length != 2 } || \
-        diff_list.flatten.reduce(0){ |memo, e| e >= memo ? e : false } === false
-      )
-        raise(StartEndPairsTypeError, "Array of ordered start/end pairs expected")
+      if diff_list.any? { |a| a.length != 2 }
+        raise(StartEndPairsTypeError, "Array of start/end pairs expected")
       end
+      diff_list.flatten.reduce(0){ |memo, e|
+        if e >= memo
+          e
+        else
+          raise(StartEndPairsNotAscendingError, "Array of start/end pairs is not ordered")
+        end
+      }
     end
 
   end

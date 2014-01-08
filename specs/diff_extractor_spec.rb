@@ -82,19 +82,19 @@ module Suspension
 
       it "raises when given diff_match_patch_list with invalid segment_type" do
         lambda {
-          DiffExtractor.extract_deletions([nil,'a'], -1)
+          DiffExtractor.extract_deletions([[nil,'a']])
         }.must_raise(DmpNumberTextPairTypeError)
       end
 
       it "raises when given diff_match_patch_list with invalid text" do
         lambda {
-          DiffExtractor.extract_deletions([-1,nil], -1)
+          DiffExtractor.extract_deletions([[-1,nil]])
         }.must_raise(DmpNumberTextPairTypeError)
       end
 
       it "raises when given invalid segment_type" do
         lambda {
-          DiffExtractor.extract_deletions([-1,'a'], 'invalid')
+          DiffExtractor.convert_diff_match_patch([[-1,'a']], 'invalid')
         }.must_raise(DmpSegmentTypeError)
       end
 

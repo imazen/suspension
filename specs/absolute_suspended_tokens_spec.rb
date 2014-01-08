@@ -116,19 +116,17 @@ module Suspension
     describe "assert_ordered_list_of_start_end_pairs" do
       it "raises when given diff_list that contains non-tuples" do
         lambda {
-          AbsoluteSuspendedTokens.new([]).send(
-            :adjust_for_deletions,
+          AbsoluteSuspendedTokens.new([]).adjust_for_deletions(
             [[0,3], [8,12], [1]]
           )
         }.must_raise StartEndPairsTypeError
       end
       it "raises when given diff_list that contains start/stop positions that are not in ascending order" do
         lambda {
-          AbsoluteSuspendedTokens.new([]).send(
-            :adjust_for_deletions,
+          AbsoluteSuspendedTokens.new([]).adjust_for_deletions(
             [[0,3], [8,12], [11,14]]
           )
-        }.must_raise TokensNotAscendingError
+        }.must_raise StartEndPairsNotAscendingError
       end
     end
   end
