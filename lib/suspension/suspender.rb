@@ -30,7 +30,7 @@ module Suspension
       @filtered_text = ""
       s = StringScanner.new(@original_doc)
       while !s.eos? do
-        no_match = true
+        match_found = false
         active_tokens.each { |token|
           if(
             (
@@ -41,7 +41,7 @@ module Suspension
               contents = s.scan(token.regex)       # matches token
             )
           )
-            no_match = false
+            match_found = true
             if token.is_plaintext
               @filtered_text << contents
               token_start += contents.length
@@ -51,7 +51,7 @@ module Suspension
             end
           end
         }
-        if no_match
+        if !match_found
           ch = s.getch # Is a multi-byte character counted as length=1?
           # The fastest way of building a string in Ruby is to use the :<<
           # operator. (compared to String#+ and StringIO#<<)
