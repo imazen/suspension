@@ -27,7 +27,13 @@ module Suspension
       token_authority = Suspender.new(doc_a_tokens, tokens_a).suspend
       text_authority = Suspender.new(doc_b_text, tokens_b).suspend
       if token_authority.filtered_text != text_authority.filtered_text
-        raise FilteredTextMismatchError, "Filtered text does not match. Run replay to->from first"
+        tokens = Suspension::REPOSITEXT_TOKENS
+        diff = DiffAlgorithm.new.call(token_authority.filtered_text, text_authority.filtered_text)
+        deltas = diff.find_all { |e| 0 != e.first }
+        raise(
+          FilteredTextMismatchError,
+          "Filtered text does not match. Run replay to->from first. Differences:\n#{ deltas.inspect }\n"
+        )
       end
 
       # Remove 'replaced_token_names' from 'doc_b_text', replacing them with tokens
