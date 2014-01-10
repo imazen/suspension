@@ -31,7 +31,7 @@ module Suspension
       result.suspended_tokens.to_flat.must_equal [11,"@"]
     end
 
-    it "handles strings with multibyte characters" do
+    it "handles strings with multibyte characters (1)" do
       result = Suspender.new(
         "èì—éùà…@",
         [Token.new(:a, /@/)]
@@ -40,7 +40,7 @@ module Suspension
       result.suspended_tokens.to_flat.must_equal [7, '@']
     end
 
-    it "handles strings with multibyte characters" do
+    it "handles strings with multibyte characters (2)" do
       result = Suspender.new(
         " Messaggio entusiasmante",
         [Token.new(:a, /@/)]

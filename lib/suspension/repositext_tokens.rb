@@ -67,6 +67,9 @@ module Suspension
   # * two subsequent block level elements without a blank line inbetween. In this
   #   case the first block level element's regex will consume it's trailing \n,
   #   leaving no leading \n for the second block level element.
+  # Related to this, we also had to add a conditional in Suspender.suspend to
+  # see if the following character is a \n in cases where StringScanner thinks
+  # it's not at #bol?
   BLOCK_START = /\n?/
   BLOCK_END = /\s*?\n/ # matches optional spaces + a newline. Typically used at the end of a block token.
 
@@ -94,7 +97,6 @@ module Suspension
 
   AT_SPECIFIC_TOKENS = [
     [:gap_mark, /%/],
-    # Note: the first \s*?\n? can't be replaced with BLOCK_LINE_END since space and \n are independent in this case.
     [:record, /#{BLOCK_START}#{OPT_SPACE}\^\^\^\s*?(\n?#{IAL})?#{BLOCK_END}/, true],
     [:subtitle_mark, /@/]
   ].map { |e| Token.new(*e) }

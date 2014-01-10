@@ -26,8 +26,8 @@ module Suspension
       }
 
       @suspended_tokens = AbsoluteSuspendedTokens.new
-      token_start = 0
       @filtered_text = ""
+      token_start = 0
       s = StringScanner.new(@original_doc)
       while !s.eos? do
         # puts
@@ -43,7 +43,7 @@ module Suspension
               s.beginning_of_line? ||              # is at beginning of line or
               (s.matched && "\n" == s.matched[-1]) # is preceded by `\n`, so effectively it's at beginning of line. (required for BLOCK_START whith preceding blank line)
             ) && (
-              contents = s.scan(token.regex)       # matches token
+              contents = s.scan(token.regex)       # matches token's regex
             )
           )
             match_found = true
@@ -62,11 +62,6 @@ module Suspension
         }
         if !match_found
           ch = s.getch # Is a multi-byte character counted as length=1?
-          # The fastest way of building a string in Ruby is to use the :<<
-          # operator. (compared to String#+ and StringIO#<<)
-          # See here for benchmarks:
-          # * http://blog.codahale.com/2006/04/18/ever-wonder-which-is-the-fastest-way-to-concatenate-strings-in-ruby/
-          # * http://stackoverflow.com/a/13276313/130830
           # puts '- no match, getch '
           # puts "  #{ ch.inspect }"
           @filtered_text << ch

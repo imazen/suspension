@@ -26,6 +26,12 @@ module Suspension
       # Suspend both texts
       token_authority = Suspender.new(doc_a_tokens, tokens_a).suspend
       text_authority = Suspender.new(doc_b_text, tokens_b).suspend
+      # puts '-' * 40
+      # puts 'token_authority'
+      # puts token_authority.filtered_text
+      # puts '-' * 40
+      # puts 'text_authority'
+      # puts text_authority.filtered_text
       if token_authority.filtered_text != text_authority.filtered_text
         tokens = Suspension::REPOSITEXT_TOKENS
         diff = DiffAlgorithm.new.call(token_authority.filtered_text, text_authority.filtered_text)
