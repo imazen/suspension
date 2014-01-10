@@ -49,7 +49,20 @@ module Suspension
       result.suspended_tokens.to_flat.must_equal []
     end
 
-
+    [
+      ["some text\n\n^^^\n\nmore text", "some text\n\nmore text", [10, "\n^^^\n"]],
+      ["some text\n^^^\n\nmore text", "some text\nmore text", [9, "\n^^^\n"]],
+      ["some text\n^^^\nmore text", "some textmore text", [9, "\n^^^\n"]],
+    ].each do |(test_string, xpect_ft, xpect_st)|
+      it "completely removes block tokens from filtered text (with leading and trailing \\n): #{ test_string.inspect }" do
+        result = Suspender.new(
+          test_string,
+          Suspension::REPOSITEXT_TOKENS
+        ).suspend
+        result.suspended_tokens.to_flat.must_equal xpect_st
+        result.filtered_text.must_equal xpect_ft
+      end
+    end
   end
 
 end

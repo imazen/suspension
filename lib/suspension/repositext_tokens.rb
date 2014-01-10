@@ -95,7 +95,7 @@ module Suspension
   AT_SPECIFIC_TOKENS = [
     [:gap_mark, /%/],
     # Note: the first \s*?\n? can't be replaced with BLOCK_LINE_END since space and \n are independent in this case.
-    [:record, /#{BLOCK_START}#{OPT_SPACE}\^\^\^\s*?\n?#{IAL}?#{BLOCK_END}/, true],
+    [:record, /#{BLOCK_START}#{OPT_SPACE}\^\^\^\s*?(\n?#{IAL})?#{BLOCK_END}/, true],
     [:subtitle_mark, /@/]
   ].map { |e| Token.new(*e) }
 
