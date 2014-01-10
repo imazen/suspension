@@ -37,12 +37,16 @@ module Suspension
       end
     end
 
-    describe "record" do
+    describe "record (with and without preceding blank line)" do
       [
+        "\n^^^\n",
+        "\n^^^ {:.rid}\n",
+        "\n^^^\n{:.rid}\n",
+        "\n^^^  {:.rid #rid-123abc}\n",
         "^^^\n",
         "^^^ {:.rid}\n",
         "^^^\n{:.rid}\n",
-        "^^^  {:.rid #rid-123abc}\n"
+        "^^^  {:.rid #rid-123abc}\n",
       ].each do |test_string|
         it "parses '#{ test_string.inspect }'" do
           token_must_parse_string(:record, test_string)
@@ -55,7 +59,10 @@ module Suspension
     # ******************************************
 
     describe "ald" do
-      ["{:ref-name: #myid .my-class}\n"].each do |test_string|
+      [
+        "\n{:ref-name: #myid .my-class}\n",
+        "{:ref-name: #myid .my-class}\n",
+      ].each do |test_string|
         it "parses '#{ test_string.inspect }'" do
           token_must_parse_string(:ald, test_string)
         end
@@ -72,10 +79,14 @@ module Suspension
 
     describe "extension_block" do
       [
+        "\n{::comment}\nBlock comment extension\n{:/comment}\n",
+        "\n{::comment} Span comment extension {:/comment}\n",
+        "\n{::options key=\"val\" /}\n",
+        "\n{::nomarkdown}This *is* not processed{:/nomarkdown}\n",
         "{::comment}\nBlock comment extension\n{:/comment}\n",
         "{::comment} Span comment extension {:/comment}\n",
         "{::options key=\"val\" /}\n",
-        "{::nomarkdown}This *is* not processed{:/nomarkdown}\n"
+        "{::nomarkdown}This *is* not processed{:/nomarkdown}\n",
       ].each do |test_string|
         it "parses '#{ test_string.inspect }'" do
           token_must_parse_string(:extension_block, test_string)
@@ -97,7 +108,10 @@ module Suspension
     end
 
     describe "header_atx" do
-      ["#", "##", "###", "####", "#####", "######"].each do |test_string|
+      [
+        "\n#", "\n##", "\n###", "\n####", "\n#####", "\n######",
+        "#", "##", "###", "####", "#####", "######",
+      ].each do |test_string|
         it "parses '#{ test_string.inspect }'" do
           token_must_parse_string(:header_atx, test_string)
         end
@@ -113,7 +127,10 @@ module Suspension
     end
 
     describe "header_setext" do
-      ["-\n", "------------\n", "=\n", "===\n"].each do |test_string|
+      [
+        "\n-\n", "\n------------\n", "\n=\n", "\n===\n",
+        "-\n", "------------\n", "=\n", "===\n",
+      ].each do |test_string|
         it "parses '#{ test_string.inspect }'" do
           token_must_parse_string(:header_setext, test_string)
         end
@@ -121,7 +138,10 @@ module Suspension
     end
 
     describe "horizontal_rule" do
-      ["***\n", "   ***\n", "* * *\n", "---\n", "___\n"].each do |test_string|
+      [
+        "\n***\n", "\n   ***\n", "\n* * *\n", "\n---\n", "\n___\n",
+        "***\n", "   ***\n", "* * *\n", "---\n", "___\n",
+      ].each do |test_string|
         it "parses '#{ test_string.inspect }'" do
           token_must_parse_string(:horizontal_rule, test_string)
         end
@@ -129,7 +149,10 @@ module Suspension
     end
 
     describe "ial_block" do
-      ["{: #ial}\n", "{:.rid}\n"].each do |test_string|
+      [
+        "\n{: #ial}\n", "\n{:.rid}\n",
+        "{: #ial}\n", "{:.rid}\n",
+      ].each do |test_string|
         it "parses '#{ test_string.inspect }'" do
           token_must_parse_string(:ial_block, test_string)
         end

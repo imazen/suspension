@@ -33,7 +33,7 @@ module Suspension
         "lorem ipsum\n\n^^^\n%dolor sit amet\n\n%consectetur adipisicing.",
         "lorem ipsum\n\n%dolor sit amet\n\n^^^\n%consectetur adipisicing.",
         REPOSITEXT_TOKENS
-      ).replace([:record]).must_equal "lorem ipsum\n\n^^^\n%dolor sit amet\n\n%consectetur adipisicing."
+      ).replace([:record]).must_equal "lorem ipsum\n\n^^^\n\n%dolor sit amet\n%consectetur adipisicing."
     end
 
     it "replaces a :record token that was moved backward within otherwise identical text." do
@@ -41,7 +41,7 @@ module Suspension
         "lorem ipsum\n\n%dolor sit amet\n\n^^^\n%consectetur adipisicing.",
         "lorem ipsum\n\n^^^\n%dolor sit amet\n\n%consectetur adipisicing.",
         REPOSITEXT_TOKENS
-      ).replace([:record]).must_equal "lorem ipsum\n\n%dolor sit amet\n\n^^^\n%consectetur adipisicing."
+      ).replace([:record]).must_equal "lorem ipsum\n%dolor sit amet\n\n\n^^^\n%consectetur adipisicing."
     end
 
     it "handles multibyte characters" do

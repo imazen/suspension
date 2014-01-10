@@ -20,7 +20,7 @@ module Suspension
   # Order of tokens
   # ---------------
   #
-  # The following factors determine the order of REPOSITEXT_TOKENS:
+  # The following factors determine the order of REPOSITEXT_TOKENS definitions:
   #
   # 1. regex specificity - put a more specific regex before a more general regex
   #    if the more general regex would match a string that should be parsed by
@@ -42,10 +42,16 @@ module Suspension
   # position is at beginning of line. So instead of adding `^` to the regex, you
   # have to set the `must_be_start_of_line` flag to true.
   #
-  # Consumption of trailing whitespace
-  # ----------------------------------
+  # Consumption of whitespace and \n
+  # --------------------------------
   #
-  # The following conventions apply for consuming trailing whitespace:
+  # Conventions for consuming leading \n:
+  #
+  # * Block tokens consume leading \n if it exists. See note above BLOCK_START
+  #   for details.
+  # * Span tokens don't consume any leading \n
+  #
+  # Conventions for consuming trailing whitespace:
   #
   # * Block tokens consume any trailing whitespace up to and including the final new line.
   # * Span tokens don't consume any trailing whitespace
@@ -53,11 +59,21 @@ module Suspension
   # INDENT = /^(?:\t| {4})/ # We may need this if we support more kramdown features
   OPT_SPACE = / {0,3}/ # Regexp for matching optional space (zero to three spaces). Typically used at the start of a line.
   BLOCK_LINE_END = /\s*?\n/ # matches optional spaces + a newline. Typically used at the end of a block token.
+  # Note: BLOCK_START matches an optional preceding \n. We want to include the
+  # preceding \n with block level tokens to guarantee that after
+  # suspension/unsuspension they are still located at the beginning of a line.
+  # We need to make it optional, because there are a few valid scenarios where there
+  # is no preceding \n before a block level element. Examples:
+  # * `^^^` record token at beginning of file
+  # * two subsequent block level elements without a blank line inbetween. In this
+  #   case the first block level element's regex will consume it's trailing \n,
+  #   leaving no leading \n for the second block level element.
+  BLOCK_START = /\n?/
 
   ALD_ANY_CHARS = /\\\}|[^\}]/
   ALD_ID_CHARS = /[\w-]/
   ALD_ID_NAME = /\w#{ALD_ID_CHARS}*/
-  ALD = /#{OPT_SPACE}\{:(#{ALD_ID_NAME}):(#{ALD_ANY_CHARS}+)\}#{BLOCK_LINE_END}/ # called ALD_START in kramdown
+  ALD = /#{BLOCK_START}#{OPT_SPACE}\{:(#{ALD_ID_NAME}):(#{ALD_ANY_CHARS}+)\}#{BLOCK_LINE_END}/ # called ALD_START in kramdown
 
   EXT_START = /\{::(comment|nomarkdown|options)#{ALD_ANY_CHARS}*?/
   EXT_WITH_BODY = /#{EXT_START}\}#{ALD_ANY_CHARS}*?\{:\/\1?\}/
@@ -78,30 +94,31 @@ module Suspension
 
   AT_SPECIFIC_TOKENS = [
     [:gap_mark, /%/],
-    [:record, /\^\^\^\s*?\n?#{IAL}?#{BLOCK_LINE_END}/, true], # Note: the first \s*?\n? can't be replaced with BLOCK_LINE_END since space and \n are independent in this case.
+    # Note: the first \s*?\n? can't be replaced with BLOCK_LINE_END since space and \n are independent in this case.
+    [:record, /#{BLOCK_START}#{OPT_SPACE}\^\^\^\s*?\n?#{IAL}?#{BLOCK_LINE_END}/, true],
     [:subtitle_mark, /@/]
   ].map { |e| Token.new(*e) }
 
   KRAMDOWN_SUBSET_TOKENS = [
     # define horizontal_rule before emphasis. Otherwise '***' will be parsed as
     # two emphasis tokens ('**' and '*')
-    [:horizontal_rule, /#{OPT_SPACE}(\*|-|_)[ \t]*\1[ \t]*\1(\1|[ \t])*\n/, true],
+    [:horizontal_rule, /#{BLOCK_START}#{OPT_SPACE}(\*|-|_)[ \t]*\1[ \t]*\1(\1|[ \t])*\n/, true],
     [:emphasis, /(\*\*?)|(__?)/],
     # Define extension_block before extension_span since it is more specific
     # We define both so that we can consume trailing whitespace on block according
     # to conventions.
     # Note on block: can't use any parentheses to remove BLOCK_LINE_END duplication
     # since that would break the \1 backreference in EXT_WITH_BODY
-    [:extension_block, /#{EXT_WITH_BODY}#{BLOCK_LINE_END}|#{EXT_WITHOUT_BODY}#{BLOCK_LINE_END}/, true],
+    [:extension_block, /#{BLOCK_START}#{EXT_WITH_BODY}#{BLOCK_LINE_END}|#{BLOCK_START}#{EXT_WITHOUT_BODY}#{BLOCK_LINE_END}/, true],
     [:extension_span, /#{EXT_WITH_BODY}|#{EXT_WITHOUT_BODY}/],
     # Define ial_block before ial_span since it is more specific
-    [:ial_block, /#{IAL}#{BLOCK_LINE_END}/, true],
+    [:ial_block, /#{BLOCK_START}#{IAL}#{BLOCK_LINE_END}/, true],
     [:ial_span, /#{IAL}/],
     # sorted alphabetically
     [:ald, ALD, true],
-    [:header_atx, /\#{1,6}/, true],
+    [:header_atx, /#{BLOCK_START}\#{1,6}/, true],
     [:header_id, /\s\{\##{ALD_ID_NAME}\}/], # Spec requires at least one leading space
-    [:header_setext, /#{OPT_SPACE}(-|=)+#{BLOCK_LINE_END}/, true],
+    [:header_setext, /#{BLOCK_START}#{OPT_SPACE}(-|=)+#{BLOCK_LINE_END}/, true],
     [:image, /!\[#{LINK_TEXT_ANY_CHARS}+\]\(#{LINK_URL_ANY_CHARS}*?\)/]
   ].map { |e| Token.new(*e) }
 

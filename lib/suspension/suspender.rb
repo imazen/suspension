@@ -32,14 +32,22 @@ module Suspension
       while !s.eos? do
         no_match = true
         active_tokens.each { |token|
-          if (!token.must_be_start_of_line || s.beginning_of_line?) && (contents = s.scan(token.regex))
+          if(
+            (
+              !token.must_be_start_of_line ||      # doesn't need to be at beginning of line or
+              s.beginning_of_line? ||              # is at beginning of line or
+              (s.matched && "\n" == s.matched[-1]) # is preceded by `\n`, so effectively it's at beginning of line. (required for BLOCK_START whith preceding blank line)
+            ) && (
+              contents = s.scan(token.regex)       # matches token
+            )
+          )
             no_match = false
             if token.is_plaintext
               @filtered_text << contents
               token_start += contents.length
             else
               @suspended_tokens << SuspendedToken.new(token_start, token.name, contents)
-              break
+              break # OPTIMIZE: investigate if moving break after this if statement makes things faster. Shouldn't we break on plaintext matches, too?
             end
           end
         }
