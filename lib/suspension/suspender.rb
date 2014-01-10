@@ -30,8 +30,13 @@ module Suspension
       @filtered_text = ""
       s = StringScanner.new(@original_doc)
       while !s.eos? do
+        # puts
+        # puts '-' * 40
+        # puts "New ss pos: #{ (s.post_match || s.string).inspect }"
         match_found = false
         active_tokens.each { |token|
+          # puts "- trying token #{ token.name }"
+          # puts "  #{ !token.must_be_start_of_line } || #{ s.beginning_of_line? } || #{ "\n" == s.peek(1) }"
           if(
             (
               !token.must_be_start_of_line ||      # doesn't need to be at beginning of line or
@@ -43,9 +48,13 @@ module Suspension
           )
             match_found = true
             if token.is_plaintext
+              # puts '  - found plaintext '
+              # puts "    #{ contents.inspect }"
               @filtered_text << contents
               token_start += contents.length
             else
+              # puts '  - found token '
+              # puts "    start: #{ token_start }, name: #{ token.name }, contents: #{ contents.inspect }"
               @suspended_tokens << SuspendedToken.new(token_start, token.name, contents)
               break # OPTIMIZE: investigate if moving break after this if statement makes things faster. Shouldn't we break on plaintext matches, too?
             end
@@ -58,6 +67,8 @@ module Suspension
           # See here for benchmarks:
           # * http://blog.codahale.com/2006/04/18/ever-wonder-which-is-the-fastest-way-to-concatenate-strings-in-ruby/
           # * http://stackoverflow.com/a/13276313/130830
+          # puts '- no match, getch '
+          # puts "  #{ ch.inspect }"
           @filtered_text << ch
           token_start += ch.length
         end
