@@ -41,7 +41,7 @@ module Suspension
             (
               !token.must_be_start_of_line ||      # doesn't need to be at beginning of line or
               s.beginning_of_line? ||              # is at beginning of line or
-              (s.matched && "\n" == s.matched[-1]) # is preceded by `\n`, so effectively it's at beginning of line. (required for BLOCK_START whith preceding blank line)
+              "\n" == s.peek(1)                    # next char is `\n`, so effectively it's at beginning of line. This is required for block level tokens that are preceded by only one, not two `\n`, but should still consume the leading `\n`. See repositext_tokens.rb BLOCK_START for more details.
             ) && (
               contents = s.scan(token.regex)       # matches token's regex
             )
