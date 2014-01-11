@@ -19,8 +19,8 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
 
-  #s.add_runtime_dependency('diff_match_patch')
-  s.add_runtime_dependency('diff_match_patch_native')
+  s.add_runtime_dependency('diff_match_patch')
+  #s.add_runtime_dependency('diff_match_patch_native')
   s.add_runtime_dependency('repositext-kramdown')
 
 
