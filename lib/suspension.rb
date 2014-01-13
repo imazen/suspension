@@ -1,7 +1,7 @@
 require 'strscan'
 require 'csv'
-require 'diff_match_patch'
-#require 'diff_match_patch_native'
+#require 'diff_match_patch'
+require 'diff_match_patch_native'
 
 module Suspension; end
 
