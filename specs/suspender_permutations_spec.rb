@@ -40,7 +40,7 @@ module Suspension
         [:ial_block, "\n{: #block-ial}\n", '', true],
         [:ial_span, "{:.span-ial}", ' '],
         [:image, "![alt text](image.jpeg)", ' '],
-        [:record, "\n^^^\n", '', true],
+        [:record_mark, "\n^^^\n", '', true],
         [:subtitle_mark, "@", '']
       ].map { |e| TokenExample.new(*e) }
 

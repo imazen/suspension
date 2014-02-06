@@ -28,20 +28,20 @@ module Suspension
       ).replace([:a, :b]).must_equal "@!a %#longer !string #with @!a %#larger !numb#er o#f @!tokens %that vary quite @a %bi#!t."
     end
 
-    it "replaces a :record token that was moved forward within otherwise identical text." do
+    it "replaces a :record_mark token that was moved forward within otherwise identical text." do
       TokenReplacer.new(
         "lorem ipsum\n\n\n^^^\n%dolor sit amet\n\n%consectetur adipisicing.", # token authority
         "lorem ipsum\n\n%dolor sit amet\n\n\n^^^\n%consectetur adipisicing.", # text authority
         REPOSITEXT_TOKENS
-      ).replace([:record]).must_equal "lorem ipsum\n\n\n^^^\n%dolor sit amet\n\n%consectetur adipisicing."
+      ).replace([:record_mark]).must_equal "lorem ipsum\n\n\n^^^\n%dolor sit amet\n\n%consectetur adipisicing."
     end
 
-    it "replaces a :record token that was moved backward within otherwise identical text." do
+    it "replaces a :record_mark token that was moved backward within otherwise identical text." do
       TokenReplacer.new(
         "lorem ipsum\n\n%dolor sit amet\n\n^^^\n%consectetur adipisicing.", # token authority
         "lorem ipsum\n\n\n^^^\n%dolor sit amet\n%consectetur adipisicing.", # text authority
         REPOSITEXT_TOKENS
-      ).replace([:record]).must_equal "lorem ipsum\n\n%dolor sit amet\n\n^^^\n%consectetur adipisicing."
+      ).replace([:record_mark]).must_equal "lorem ipsum\n\n%dolor sit amet\n\n^^^\n%consectetur adipisicing."
     end
 
     it "handles multibyte characters" do

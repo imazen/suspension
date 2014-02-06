@@ -72,7 +72,7 @@ Retaining kramdown-subset tokens, discarding at-specific tokens.
 
 [![Repositext tokens](https://raw.github.com/imazen/suspension/master/doc/images/rt_wf_convert_at_to_pt.png)](https://raw.github.com/imazen/suspension/master/doc/images/rt_wf_convert_at_to_pt.png)
 
-### Workflow: Sync record tokens from AT V2 to AT V1
+### Workflow: Sync record_mark tokens from AT V2 to AT V1
 
 Retaining all other tokens in AT V1.
 

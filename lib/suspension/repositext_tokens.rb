@@ -63,7 +63,7 @@ module Suspension
   # suspension/unsuspension they are still located at the beginning of a line.
   # We need to make it optional, because there are a few valid scenarios where there
   # is no preceding \n before a block level element. Examples:
-  # * `^^^` record token at beginning of file
+  # * `^^^` record_mark token at beginning of file
   # * two subsequent block level elements without a blank line inbetween. In this
   #   case the first block level element's regex will consume it's trailing \n,
   #   leaving no leading \n for the second block level element.
@@ -97,7 +97,7 @@ module Suspension
 
   AT_SPECIFIC_TOKENS = [
     [:gap_mark, /%/],
-    [:record, /#{BLOCK_START}#{OPT_SPACE}\^\^\^\s*?(\n?#{IAL})?#{BLOCK_END}/, true],
+    [:record_mark, /#{BLOCK_START}#{OPT_SPACE}\^\^\^\s*?(\n?#{IAL})?#{BLOCK_END}/, true],
     [:subtitle_mark, /@/]
   ].map { |e| Token.new(*e) }
 

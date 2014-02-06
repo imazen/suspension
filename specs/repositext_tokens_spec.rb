@@ -37,7 +37,7 @@ module Suspension
       end
     end
 
-    describe "record (with and without preceding blank line)" do
+    describe "record_mark (with and without preceding blank line)" do
       [
         "\n^^^\n",
         "\n^^^ {:.rid}\n",
@@ -47,9 +47,10 @@ module Suspension
         "^^^ {:.rid}\n",
         "^^^\n{:.rid}\n",
         "^^^  {:.rid #rid-123abc}\n",
+        "^^^ {: .rid #f-49020029 kpn=\"002\"}\n"
       ].each do |test_string|
         it "parses '#{ test_string.inspect }'" do
-          token_must_parse_string(:record, test_string)
+          token_must_parse_string(:record_mark, test_string)
         end
       end
     end
