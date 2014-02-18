@@ -53,8 +53,10 @@ module Suspension
               @filtered_text << contents
               token_start += contents.length
             else
-              # puts '  - found token '
-              # puts "    start: #{ token_start }, name: #{ token.name }, contents: #{ contents.inspect }"
+              # if :record_mark == token.name
+              #   puts '  - found token '
+              #   puts "    start: #{ token_start }, name: #{ token.name }, contents: #{ contents.inspect }"
+              # end
               @suspended_tokens << SuspendedToken.new(token_start, token.name, contents)
               break # OPTIMIZE: investigate if moving break after this if statement makes things faster. Shouldn't we break on plaintext matches, too?
             end
