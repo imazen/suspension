@@ -45,10 +45,7 @@ module Suspension
       AbsoluteSuspendedTokens.new(
         map { |token|
           token = token.dup
-          # Set affinity depending on token type. Most work better with :right,
-          # however some require :left.
-          # TODO: Should we make affinity a property of REPOSITEXT_TOKENS?
-          affinity ||= [:record_mark].include?(token.name) ? :left : :right
+          affinity ||= :right
           # Accumulate all insertions prior to (or overlapping) the token
           token.position += insertions.reduce(0) { |pos_offset, ins|
             # Update ref_pos so that we can include insertions that would prior
