@@ -19,10 +19,11 @@ module Suspension
     # Returns a document that replaces `replaced_token_names` in `doc_b_text`
     # based on where they are located in `doc_a_tokens`. Retains all
     # `doc_b_text`'s other tokens that are not in `replaced_token_names`.
-    # @param[Array<Symbol>] replaced_token_names an Array of token names to be
+    # @param[Array<Symbol>, Symbol] replaced_token_names an Array of token names to be
     #     replaced.
     # @return[String] document with replaced tokens
     def replace(replaced_token_names)
+      replaced_token_names = [*replaced_token_names] # cast to array
       # Suspend both texts
       token_authority = Suspender.new(doc_a_tokens, tokens_a).suspend
       text_authority = Suspender.new(doc_b_text, tokens_b).suspend
