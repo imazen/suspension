@@ -27,11 +27,12 @@ module Suspension
       @output_text = ""
       last_token = 0
       token_subset.each { |token|
-        @output_text << filtered_text[last_token...token.position]
+        # fall back to empty string when last_token and token.position are identical
+        @output_text << (filtered_text[last_token...token.position] || '')
         @output_text << token.contents
         last_token = token.position
       }
-      @output_text << filtered_text[last_token..-1]
+      @output_text << (filtered_text[last_token..-1] || '')
       @output_text
     end
 
