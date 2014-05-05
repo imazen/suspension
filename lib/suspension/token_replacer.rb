@@ -37,7 +37,6 @@ module Suspension
       # puts 'text_authority'
       # puts text_authority.filtered_text.inspect
       if token_authority.filtered_text != text_authority.filtered_text
-        tokens = Suspension::REPOSITEXT_TOKENS
         diff = DiffAlgorithm.new.call(token_authority.filtered_text, text_authority.filtered_text)
         deltas = diff.find_all { |e| 0 != e.first }
         raise(

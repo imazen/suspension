@@ -24,7 +24,6 @@ module Suspension
       active_tokens = token_library.select { |t|
       	token_names.map(&:to_sym).include?(t.name.to_sym)
       }
-
       @suspended_tokens = AbsoluteSuspendedTokens.new
       @filtered_text = ""
       token_start = 0

@@ -110,7 +110,8 @@ module Suspension
             it "suspends w/o plain text\n>>>>\n#{ test_string }\n>>>> correctly" do
               puts test_string.inspect  if PRINT_DEBUG_INFO
               s = Suspender.new(test_string, REPOSITEXT_TOKENS).suspend
-              s.suspended_tokens.to_flat \
+              s.suspended_tokens
+               .to_flat
                .must_equal compute_expectation(t1, t1_pos, t2, t2_pos)
             end
 
