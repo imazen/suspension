@@ -27,21 +27,23 @@ module Suspension
       # Suspend both texts
       token_authority = Suspender.new(doc_a_tokens, tokens_a).suspend
       text_authority = Suspender.new(doc_b_text, tokens_b).suspend
-      # puts '-' * 40
-      # puts 'replaced_token_names'
-      # puts replaced_token_names.inspect
-      # puts '-' * 40
-      # puts 'token_authority'
-      # puts token_authority.filtered_text.inspect
-      # puts '-' * 40
-      # puts 'text_authority'
-      # puts text_authority.filtered_text.inspect
+      # $stderr.puts '-' * 40
+      # $stderr.puts 'replaced_token_names'
+      # $stderr.puts replaced_token_names.inspect
+      # $stderr.puts '-' * 40
+      # $stderr.puts 'token_authority'
+      # $stderr.puts token_authority.filtered_text.inspect
+      # $stderr.puts '-' * 40
+      # $stderr.puts 'text_authority'
+      # $stderr.puts text_authority.filtered_text.inspect
       if token_authority.filtered_text != text_authority.filtered_text
-        diff = DiffAlgorithm.new.call(token_authority.filtered_text, text_authority.filtered_text)
-        deltas = diff.find_all { |e| 0 != e.first }
+        diffs = Suspension::StringComparer.compare(
+          token_authority.filtered_text,
+          text_authority.filtered_text
+        )
         raise(
           FilteredTextMismatchError,
-          "Filtered text does not match. Run replay to->from first. Differences:\n#{ deltas.inspect }\n"
+          "Filtered text does not match. Run replay to->from first. Differences:\n#{ diffs.inspect }\n"
         )
       end
 
