@@ -8,7 +8,7 @@ module Suspension
     # @param[Array<Token>, optional] tokens_a tokens to be suspended from
     #     doc_a_text, defaults to REPOSITEXT_TOKENS.
     # @param[Array<Token>, optional] tokens_b tokens to be suspended from
-    #     doc_b_tokens, defaults to REPOSITEXT_TOKENS.
+    #     doc_b_tokens, defaults to tokens_a (implicitly to REPOSITEXT_TOKENS).
     # @param[Proc] diff_algorithm The diff algo, accepts two params (strings to compare)
     #              defaults to DiffAlgorithm
     def initialize(doc_a_text, doc_b_tokens, tokens_a = nil, tokens_b = nil, diff_algorithm = nil)
