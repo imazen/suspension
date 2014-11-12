@@ -43,7 +43,7 @@ module Suspension
             # only count chars and newlines in identical or deletions since all info
             # refers to string_1
             char_num += diff.last.length
-            line_num += diff.last.count('\n')
+            line_num += diff.last.count("\n")
           end
           r
         }
