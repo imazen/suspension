@@ -47,7 +47,7 @@ module Suspension
         "^^^ {:.rid}\n",
         "^^^\n{:.rid}\n",
         "^^^  {:.rid #rid-123abc}\n",
-        "^^^ {: .rid #f-49020029 kpn=\"002\"}\n",
+        "^^^ {: .rid #rid-49020029 kpn=\"002\"}\n",
       ].each do |test_string|
         it "parses '#{ test_string.inspect }'" do
           token_must_parse_string(:record_mark, test_string)

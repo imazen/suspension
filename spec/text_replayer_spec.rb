@@ -49,13 +49,13 @@ module Suspension
           ""
         ].join("\n")
         doc_b_tokens = [
-          "^^^{:.rid #f-65020019}",
+          "^^^{:.rid #rid-65020019}",
           "",
           "Here is updatable text",
           ""
         ].join("\n")
         xpect = [
-          "^^^{:.rid #f-65020019}",
+          "^^^{:.rid #rid-65020019}",
           "",
           "Here is authoritative text",
           ""
