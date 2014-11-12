@@ -15,7 +15,7 @@ module Suspension
         diffs = Suspension::DiffAlgorithm.new.call(string_1, string_2)
         deltas = []
         char_num = 0
-        line_num = 0
+        line_num = 1
         excerpt_window = 20
         # Add context information to diffs
         deltas = diffs.map { |diff|
