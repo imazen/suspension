@@ -49,10 +49,15 @@ module Suspension
             r
           rescue ArgumentError => e
             # Handles invalid UTF-8 byte sequences in diff
-            valid_string = diff.last.force_encoding('UTF-8') \
-                                    .encode('UTF-16', :invalid => :replace, :replace => '?') \
-                                    .encode('UTF-8')
-            $stderr.puts "diff on line #{ line_num } that caused the error: #{ valid_string.inspect }"
+            valid_excerpt, valid_string = [excerpt, diff.last].map { |e|
+              e.force_encoding('UTF-8') \
+               .encode('UTF-16', :invalid => :replace, :replace => '[invalid UTF-8 byte]') \
+               .encode('UTF-8')
+            }
+            $stderr.puts "Error details:"
+            $stderr.puts " - line: #{ line_num }"
+            $stderr.puts " - diff: #{ valid_string.inspect }"
+            $stderr.puts " - excerpt: #{ excerpt.inspect }"
             raise e
           end
         }
