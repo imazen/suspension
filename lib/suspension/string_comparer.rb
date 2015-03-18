@@ -19,33 +19,42 @@ module Suspension
         excerpt_window = 20
         # Add context information to diffs
         deltas = diffs.map { |diff|
-          excerpt_start = [(char_num - excerpt_window), 0].max
-          excerpt_end = [(char_num + diff.last.length + excerpt_window), string_1.length].min
-          excerpt = case diff.first
-          when -1
-            # use string_1 as context for deletions
-            string_1[excerpt_start..excerpt_end]
-          when 1
-            # use string_2 as context for additions
-            string_2[excerpt_start..excerpt_end]
-          when 0
-            nil
-          else
-            raise "Handle this: #{ diff.inspect }"
+          begin
+            excerpt_start = [(char_num - excerpt_window), 0].max
+            excerpt_end = [(char_num + diff.last.length + excerpt_window), string_1.length].min
+            excerpt = case diff.first
+            when -1
+              # use string_1 as context for deletions
+              string_1[excerpt_start..excerpt_end]
+            when 1
+              # use string_2 as context for additions
+              string_2[excerpt_start..excerpt_end]
+            when 0
+              nil
+            else
+              raise "Handle this: #{ diff.inspect }"
+            end
+            r = [
+              diff.first, # type of modification
+              diff.last, # diff string
+              "line #{ line_num }",
+              excerpt
+            ]
+            if [0,-1].include?(diff.first)
+              # only count chars and newlines in identical or deletions since all info
+              # refers to string_1
+              char_num += diff.last.length
+              line_num += diff.last.count("\n")
+            end
+            r
+          rescue ArgumentError => e
+            # Handles invalid UTF-8 byte sequences in diff
+            valid_string = diff.last.force_encoding('UTF-8') \
+                                    .encode('UTF-16', :invalid => :replace, :replace => '?') \
+                                    .encode('UTF-8')
+            $stderr.puts "diff on line #{ line_num } that caused the error: #{ valid_string.inspect }"
+            raise e
           end
-          r = [
-            diff.first, # type of modification
-            diff.last, # diff string
-            "line #{ line_num }",
-            excerpt
-          ]
-          if [0,-1].include?(diff.first)
-            # only count chars and newlines in identical or deletions since all info
-            # refers to string_1
-            char_num += diff.last.length
-            line_num += diff.last.count("\n")
-          end
-          r
         }
         deltas = deltas.find_all { |e| 0 != e.first }
       end
