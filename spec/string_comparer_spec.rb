@@ -44,8 +44,72 @@ module Suspension
           'multibyte char alignment — one multibyte char is emdash, the other elipsis',
           'multibyte char alignment … one multibyte char is emdash, the other elipsis',
           [
-            [-1, "multibyte char alignment —", "line 1", "multibyte char alignment — one multibyte char i"],
-            [1, "multibyte char alignment …", "line 1", "yte char alignment … one multibyte char is emdash, the other elipsi"]
+            [-1, "—", "line 1", "byte char alignment — one multibyte char i"],
+            [1, "…", "line 1", "yte char alignment … one multibyte char is"],
+          ]
+        ],
+        [
+          '— multibyte char at pos 0',
+          '… multibyte char at pos 0',
+          [
+            [-1, "—", "line 1", "— multibyte char at po"],
+            [1, "…", "line 1", "… multibyte char at pos"]
+          ]
+        ],
+        [
+          'a— multibyte char at pos 1',
+          'a… multibyte char at pos 1',
+          [
+            [-1, "—", "line 1", "a— multibyte char at po"],
+            [1, "…", "line 1", "a… multibyte char at pos"]
+          ]
+        ],
+        [
+          'ab— multibyte char at pos 2',
+          'ab… multibyte char at pos 2',
+          [
+            [-1, "—", "line 1", "ab— multibyte char at po"],
+            [1, "…", "line 1", "ab… multibyte char at pos"]
+          ]
+        ],
+        [
+          'abc— multibyte char at pos 3',
+          'abc… multibyte char at pos 3',
+          [
+            [-1, "—", "line 1", "abc— multibyte char at po"],
+            [1, "…", "line 1", "abc… multibyte char at pos"]
+          ]
+        ],
+        [
+          'abcd— multibyte char at pos 4',
+          'abcd… multibyte char at pos 4',
+          [
+            [-1, "—", "line 1", "abcd— multibyte char at po"],
+            [1, "…", "line 1", "abcd… multibyte char at pos"]
+          ]
+        ],
+        [
+          'abcde— multibyte char at pos 5',
+          'abcde… multibyte char at pos 5',
+          [
+            [-1, "—", "line 1", "abcde— multibyte char at po"],
+            [1, "…", "line 1", "abcde… multibyte char at pos"]
+          ]
+        ],
+        [
+          'abcdef— multibyte char at pos 6',
+          'abcdef… multibyte char at pos 6',
+          [
+            [-1, "—", "line 1", "abcdef— multibyte char at po"],
+            [1, "…", "line 1", "abcdef… multibyte char at pos"]
+          ]
+        ],
+        [
+          "word1 word2—word2…word3 word4 word5",
+          "word1 word2…word3 word4",
+          [
+            [-1, "—word2", "line 1", "word1 word2—word2…word3 word4 word5"],
+            [-1, " word5", "line 1", "d2—word2…word3 word4 word5"]
           ]
         ],
       ].each do |(string_1, string_2, xpect)|
