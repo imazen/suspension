@@ -17,8 +17,11 @@ module Suspension
         diffs = Suspension::DiffAlgorithm.new.call(string_1, string_2)
         # Add context information to diffs
         deltas = []
-        char_num = 0
-        line_num = 1
+        # We need to keep separate char counters for string_1 and string_2 so
+        # that we can pull the excerpt for either of them.
+        char_pos_1 = 0 # character counter on string_1
+        char_pos_2 = 0 # character counter on string_2
+        line_num_1 = 1 # line counter on string_1. We don't need one for string_2
         excerpt_window = 20
         # I have to do a manual loop since we're relying on idx for exception
         # rescue retries on invalid utf8 byte sequences
@@ -28,19 +31,24 @@ module Suspension
             diff = diffs[idx]
             if add_context_info
               # Add location and excerpt
-              excerpt_start = [(char_num - excerpt_window), 0].max
-              excerpt_end = [
-                (char_num + diff.last.length + excerpt_window),
-                string_1.length
-              ].min
               excerpt = case diff.first
               when -1
                 # use string_1 as context for deletions
+                excerpt_start = [(char_pos_1 - excerpt_window), 0].max
+                excerpt_end = [(char_pos_1 + excerpt_window), string_1.length].min - 1
+                line_num_1 += diff.last.count("\n") # do first as it can raise exception
+                char_pos_1 += diff.last.length
                 string_1[excerpt_start..excerpt_end]
               when 1
                 # use string_2 as context for additions
+                excerpt_start = [(char_pos_2 - excerpt_window), 0].max
+                excerpt_end = [(char_pos_2 + excerpt_window), string_2.length].min - 1
+                char_pos_2 += diff.last.length
                 string_2[excerpt_start..excerpt_end]
               when 0
+                line_num_1 += diff.last.count("\n") # do first as it can raise exception
+                char_pos_1 += diff.last.length
+                char_pos_2 += diff.last.length
                 nil
               else
                 raise "Handle this: #{ diff.inspect }"
@@ -48,15 +56,9 @@ module Suspension
               r = [
                 diff.first, # type of modification
                 diff.last, # diff string
-                "line #{ line_num }",
+                "line #{ line_num_1 }",
                 excerpt
               ]
-              if [0,-1].include?(diff.first)
-                # only count chars and newlines in identical or deletions since
-                # all info refers to string_1
-                line_num += diff.last.count("\n") # do first as it can raise exception
-                char_num += diff.last.length
-              end
             else
               # Use diffs as returned by DMP
               diff.last.match(/./) # Trigger exception for invalid byte sequence in UTF-8
@@ -134,7 +136,7 @@ module Suspension
                       .encode('UTF-8')
               }
               $stderr.puts "Error details:"
-              $stderr.puts " - line: #{ line_num }"
+              $stderr.puts " - line: #{ line_num_1 }"
               $stderr.puts " - diff: #{ valid_string.inspect }"
               $stderr.puts " - excerpt: #{ excerpt.inspect }"
               raise e
