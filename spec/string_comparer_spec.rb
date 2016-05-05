@@ -161,5 +161,24 @@ module Suspension
 
     end
 
+    describe '.compare with option :excerpt_window' do
+
+      it "returns excerpt with expected length" do
+        Suspension::StringComparer.compare(
+          "word1 word2 word3",
+          "word1 word2 word3 word4",
+          true,
+          false,
+          { excerpt_window: 5 }
+        ).must_equal(
+          [
+            [0, "word1 word2 word3", "line 1", nil],
+            [1, " word4", "line 1", "word3 word"]
+          ]
+        )
+      end
+
+    end
+
   end
 end

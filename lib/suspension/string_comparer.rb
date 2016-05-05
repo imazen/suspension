@@ -7,10 +7,14 @@ module Suspension
     # @param string_2 [String]
     # @param add_context_info [Boolean, optional] if true will add location and excerpt
     # @param different_only [Boolean, optional] if true will show -1 and 1 segments only
+    # @param options [Hash, optional] with symbolized keys
     # @return[Array] An array of diffs like so:
     # [[1, 'added', 'line 42', 'text_before text_after'], [-1, 'removed ', 'line 43', 'text_before removed text_after']]
     # All information is relative to string_1. 1 means a string was added, -1 it was deleted.
-    def self.compare(string_1, string_2, add_context_info = true, different_only = true)
+    def self.compare(string_1, string_2, add_context_info=true, different_only=true, options={})
+      options = {
+        excerpt_window: 20, # how much context do we show before and after
+      }.merge(options)
       if string_1 == string_2
         return []
       else
@@ -22,7 +26,7 @@ module Suspension
         char_pos_1 = 0 # character counter on string_1
         char_pos_2 = 0 # character counter on string_2
         line_num_1 = 1 # line counter on string_1. We don't need one for string_2
-        excerpt_window = 20
+        excerpt_window = options[:excerpt_window]
         # I have to do a manual loop since we're relying on idx for exception
         # rescue retries on invalid utf8 byte sequences
         idx = 0
