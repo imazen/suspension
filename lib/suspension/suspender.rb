@@ -27,24 +27,38 @@ module Suspension
       @suspended_tokens = AbsoluteSuspendedTokens.new
       @filtered_text = ""
       token_start = 0
+      effective_bol = nil
+      previously_consumed_token_was_at_bol = nil
       s = StringScanner.new(@original_doc)
       while !s.eos? do
         # puts
         # puts '-' * 40
         # puts "New ss pos: #{ (s.post_match || s.rest).inspect }"
         match_found = false
+        # Compute effective_bol flag. The current position is considered
+        # beginning of line if any of the following ist true:
+        #  * Current pos is at beginning of line.
+        #  * Previous token was at bol and was removed.
+        #  * Next char is `\n`, so effectively it's at beginning of line. This
+        #    is required for block level tokens that are preceded by only one,
+        #    not two `\n`, but should still consume the leading `\n`.
+        #    See repositext_tokens.rb BLOCK_START for more details.
+        effective_bol = (
+          s.beginning_of_line? ||
+          previously_consumed_token_was_at_bol ||
+          "\n" == s.peek(1)
+        )
         active_tokens.each { |token|
           # puts "- trying token #{ token.name }"
           # puts "  #{ !token.must_be_start_of_line } || #{ s.beginning_of_line? } || #{ "\n" == s.peek(1) }"
+          previously_consumed_token_was_at_bol = false
           if(
-            (
-              !token.must_be_start_of_line ||      # doesn't need to be at beginning of line or
-              s.beginning_of_line? ||              # is at beginning of line or
-              "\n" == s.peek(1)                    # next char is `\n`, so effectively it's at beginning of line. This is required for block level tokens that are preceded by only one, not two `\n`, but should still consume the leading `\n`. See repositext_tokens.rb BLOCK_START for more details.
-            ) && (
-              contents = s.scan(token.regex)       # matches token's regex
-            )
+            !token.must_be_start_of_line || effective_bol) &&
+            (contents = s.scan(token.regex)
           )
+            # Token doesn't need to be at beginning of line or
+            # current pos is effectively at beginning of line
+            # and rest matches token's regex
             match_found = true
             if token.is_plaintext
               # puts '  - found plaintext '
@@ -55,6 +69,7 @@ module Suspension
               # puts '  - found token '
               # puts "    start: #{ token_start }, name: #{ token.name }, contents: #{ contents.inspect }"
               @suspended_tokens << SuspendedToken.new(token_start, token.name, contents)
+              previously_consumed_token_was_at_bol = effective_bol
               break # OPTIMIZE: investigate if moving break after this if statement makes things faster. Shouldn't we break on plaintext matches, too?
             end
           end

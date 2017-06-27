@@ -49,6 +49,16 @@ module Suspension
       result.suspended_tokens.to_flat.must_equal []
     end
 
+    it "removes headers after subtitle marks" do
+      result = Suspender.new("@# header", Suspension::REPOSITEXT_TOKENS).suspend
+      result.filtered_text.must_equal "header"
+    end
+
+    it "does not remove headers after plain text (they are not at beginning of line)" do
+      result = Suspender.new(" # header", Suspension::REPOSITEXT_TOKENS).suspend
+      result.filtered_text.must_equal " # header"
+    end
+
     [
       ["some text\n\n^^^\n\nmore text", "some text\n\nmore text", [10, "\n^^^\n"]],
       ["some text\n^^^\n\nmore text", "some text\nmore text", [9, "\n^^^\n"]],
