@@ -118,7 +118,7 @@ module Suspension
     [:ial_span, /#{IAL}/],
     # sorted alphabetically
     [:ald, ALD, true],
-    [:header_atx, /#{BLOCK_START}\#{1,6}/, true],
+    [:header_atx, /\#{1,6}\s?/, true],
     [:header_id, /\s\{\##{ALD_ID_NAME}\}/], # Spec requires at least one leading space
     [:header_setext, /#{BLOCK_START}#{OPT_SPACE}(-|=)+#{BLOCK_END}/, true],
     [:image, /!\[#{LINK_TEXT_ANY_CHARS}+\]\(#{LINK_URL_ANY_CHARS}*?\)/]

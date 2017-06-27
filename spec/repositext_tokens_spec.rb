@@ -110,7 +110,7 @@ module Suspension
 
     describe "header_atx" do
       [
-        "\n#", "\n##", "\n###", "\n####", "\n#####", "\n######",
+        "# ", "## ", "### ", "#### ", "##### ", "###### ",
         "#", "##", "###", "####", "#####", "######",
       ].each do |test_string|
         it "parses '#{ test_string.inspect }'" do

@@ -16,5 +16,22 @@ module Suspension
       ).remove.must_equal "^^^\n{:.rid}\n*emphasis* normal paragraph"
     end
 
+    describe 'REPOSITEXT_TOKENS' do
+      [
+        [
+          'Level 3 header between two paragraphs',
+          "word1\n{: .normal}\n\n### word2\n{: .normal}\n\nword3",
+          "word1\nword2\nword3",
+        ],
+      ].each do |description, input, xpect|
+        it "handles #{ description }" do
+          TokenRemover.new(
+            input,
+            Suspension::REPOSITEXT_TOKENS
+          ).remove.must_equal(xpect)
+        end
+      end
+    end
+
   end
 end
