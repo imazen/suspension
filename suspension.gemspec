@@ -4,10 +4,10 @@ $:.push File.expand_path("../lib", __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = "suspension"
-  s.version     = '0.0.1'
+  s.version     = '1.0.0'
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["Nathanael Jones", "Jo Hund"]
-  s.email       = ["nathanael.jones@gmail.com"]
+  s.authors     = ["Jo Hund", "Nathanael Jones"]
+  s.email       = ["jhund@clearcove.ca"]
   s.homepage    = "http://github.com/imazen/suspension"
   s.summary     = %q{Enabling cross-format merging through token suspension}
   s.description = ""
