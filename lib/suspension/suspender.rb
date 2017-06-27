@@ -31,7 +31,7 @@ module Suspension
       while !s.eos? do
         # puts
         # puts '-' * 40
-        # puts "New ss pos: #{ (s.post_match || s.string).inspect }"
+        # puts "New ss pos: #{ (s.post_match || s.rest).inspect }"
         match_found = false
         active_tokens.each { |token|
           # puts "- trying token #{ token.name }"
@@ -52,10 +52,8 @@ module Suspension
               @filtered_text << contents
               token_start += contents.length
             else
-              # if :record_mark == token.name
-              #   puts '  - found token '
-              #   puts "    start: #{ token_start }, name: #{ token.name }, contents: #{ contents.inspect }"
-              # end
+              # puts '  - found token '
+              # puts "    start: #{ token_start }, name: #{ token.name }, contents: #{ contents.inspect }"
               @suspended_tokens << SuspendedToken.new(token_start, token.name, contents)
               break # OPTIMIZE: investigate if moving break after this if statement makes things faster. Shouldn't we break on plaintext matches, too?
             end
