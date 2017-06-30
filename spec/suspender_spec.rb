@@ -6,6 +6,7 @@ module Suspension
 
     it "suspends tokens" do
       result = Suspender.new(
+        #01234456788
         "aabb@ccnn%@",
         [Token.new(:a, /@/), Token.new(:b, /%/)]
       ).suspend
@@ -24,6 +25,7 @@ module Suspension
 
     it "doesn't suspend html entities mixed with tokens" do
       result = Suspender.new(
+        #01234567890112345
         'aabb&#64;cc@nn&#37;&#64;',
         [Token.new(:a, /@/), Token.new(:b, /%/)]
       ).suspend
@@ -33,6 +35,7 @@ module Suspension
 
     it "handles strings with multibyte characters (1)" do
       result = Suspender.new(
+        #01234567
         "èì—éùà…@",
         [Token.new(:a, /@/)]
       ).suspend
@@ -60,8 +63,11 @@ module Suspension
     end
 
     [
+      # 0123456789 0 0000 1 2
       ["some text\n\n^^^\n\nmore text", "some text\n\nmore text", [10, "\n^^^\n"]],
+      # 0123456789 9999 0 12
       ["some text\n^^^\n\nmore text", "some text\nmore text", [9, "\n^^^\n"]],
+      # 0123456789 9999 012
       ["some text\n^^^\nmore text", "some textmore text", [9, "\n^^^\n"]],
     ].each do |(test_string, xpect_ft, xpect_st)|
       it "completely removes block tokens from filtered text (with leading and trailing \\n): #{ test_string.inspect }" do
