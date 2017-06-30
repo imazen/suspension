@@ -72,6 +72,30 @@ module Suspension
         ).replay.must_equal "aaèx@éùà…e%@"
       end
 
+      it "handles deletion overlapping single token" do
+        TextReplayer.new(
+          "aacc",
+          "aabb@bbcc",
+          [Token.new(:a, /@/)]
+        ).replay.must_equal "aa@cc"
+      end
+
+      it "handles deletion overlapping multiple tokens" do
+        TextReplayer.new(
+          "aacc",
+          "aabb@bb@bbcc",
+          [Token.new(:a, /@/)]
+        ).replay.must_equal "aa@@cc"
+      end
+
+      it "handles insertion overlapping single token" do
+        TextReplayer.new(
+          "aabbbbcc",
+          "aa@cc",
+          [Token.new(:a, /@/)]
+        ).replay.must_equal "aabbbb@cc"
+      end
+
     end
 
   end
