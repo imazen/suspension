@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    suspension (1.0.1)
+    suspension (1.0.2)
       diff_match_patch_native
 
 GEM
@@ -25,4 +25,4 @@ DEPENDENCIES
   suspension!
 
 BUNDLED WITH
-   1.13.7
+   1.15.1
