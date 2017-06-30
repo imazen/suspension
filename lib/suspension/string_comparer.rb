@@ -71,8 +71,8 @@ module Suspension
             deltas << r
             # Increment at the end of rescue block so that retries are idempotent
             idx += 1
-          rescue ArgumentError => e
-            if e.message.index('invalid byte sequence')
+          rescue ArgumentError => ex
+            if ex.message.index('invalid byte sequence')
               # Handles invalid UTF-8 byte sequences in diff
               # This is caused by two different multibyte characters at the
               # same position where the first bytes are identical, and a
@@ -142,8 +142,8 @@ module Suspension
               $stderr.puts "Error details:"
               $stderr.puts " - line: #{ line_num_1 }"
               $stderr.puts " - diff: #{ valid_string.inspect }"
-              $stderr.puts " - excerpt: #{ excerpt.inspect }"
-              raise e
+              $stderr.puts " - excerpt: #{ valid_excerpt.inspect }"
+              raise ex
             end
           end
         }
