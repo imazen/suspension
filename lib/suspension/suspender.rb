@@ -31,9 +31,11 @@ module Suspension
       previous_token_was_at_bol_and_transparent = nil
       s = StringScanner.new(@original_doc)
       while !s.eos? do
-        # puts
-        # puts '-' * 40
-        # puts "New ss pos: #{ (s.post_match || s.rest).inspect }"
+        if debug
+          puts
+          puts '-' * 40
+          puts "New ss pos: #{ (s.post_match || s.rest).inspect }"
+        end
         match_found = false
         # Compute effective_bol flag. The current position is considered
         # beginning of line if any of the following ist true:
@@ -48,9 +50,20 @@ module Suspension
           previous_token_was_at_bol_and_transparent ||
           "\n" == s.peek(1)
         )
+        if debug
+          puts "effective_bol: #{ effective_bol.inspect }"
+          puts "  - s.beginning_of_line?: #{ s.beginning_of_line?.inspect }"
+          puts "  - previous_token_was_at_bol_and_transparent: #{ previous_token_was_at_bol_and_transparent.inspect }"
+          puts "  - \"\\n\" == s.peek(1): #{ "\n" == s.peek(1) }"
+          puts "Trying tokens:"
+        end
         active_tokens.each { |token|
-          # puts "- trying token #{ token.name }"
-          # puts "  #{ !token.must_be_start_of_line } || #{ s.beginning_of_line? } || #{ "\n" == s.peek(1) }"
+          if debug
+            puts "  - trying token #{ token.name }"
+            puts "    token.must_be_start_of_line: #{ token.must_be_start_of_line.inspect }"
+            puts "    token.is_transparent_to_beginning_of_line: #{ token.is_transparent_to_beginning_of_line.inspect }"
+            puts "    #{ !token.must_be_start_of_line } || #{ effective_bol }"
+          end
           previous_token_was_at_bol_and_transparent = false
           if(
             !token.must_be_start_of_line || effective_bol) &&
@@ -61,13 +74,17 @@ module Suspension
             # and rest matches token's regex
             match_found = true
             if token.is_plaintext
-              # puts '  - found plaintext '
-              # puts "    #{ contents.inspect }"
+              if debug
+                puts '    - found plaintext '
+                puts "      #{ contents.inspect }"
+              end
               @filtered_text << contents
               token_start += contents.length
             else
-              # puts '  - found token '
-              # puts "    start: #{ token_start }, name: #{ token.name }, contents: #{ contents.inspect }"
+              if debug
+                puts '    - found token '
+                puts "      start: #{ token_start }, name: #{ token.name }, contents: #{ contents.inspect }, is_transparent_to_beginning_of_line: #{ token.is_transparent_to_beginning_of_line.inspect }"
+              end
               @suspended_tokens << SuspendedToken.new(token_start, token.name, contents)
               previous_token_was_at_bol_and_transparent = token.is_transparent_to_beginning_of_line && effective_bol
               break # OPTIMIZE: investigate if moving break after this if statement makes things faster. Shouldn't we break on plaintext matches, too?
@@ -76,13 +93,19 @@ module Suspension
         }
         if !match_found
           ch = s.getch # Is a multi-byte character counted as length=1?
-          # puts '- no match, getch '
-          # puts "  #{ ch.inspect }"
+          if debug
+            puts '- no match, getch '
+            puts "  #{ ch.inspect }"
+          end
           @filtered_text << ch
           token_start += ch.length
         end
       end
       self
+    end
+
+    def debug
+      false
     end
 
   end
