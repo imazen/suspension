@@ -201,12 +201,10 @@ module Suspension
           [251, :subtitle_mark, '@'],
           [371, :subtitle_mark, '@'],
         ].map { |(pos, name, contents)| SuspendedToken.new(pos, name, contents) }
-        StackProf.run(mode: :cpu, out: 'stackprof.dump', interval: 2) do
-          AbsoluteSuspendedTokens.new(tokens)
-            .validate
-            .adjust_for_insertions(insertions)
-            .must_equal(xpect)
-        end
+        AbsoluteSuspendedTokens.new(tokens)
+          .validate
+          .adjust_for_insertions(insertions)
+          .must_equal(xpect)
       end
 
     #   it "performs efficiently" do

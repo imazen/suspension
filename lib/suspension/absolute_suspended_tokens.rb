@@ -111,7 +111,6 @@ module Suspension
       # Initialize start values
       adjusted_token_position = nil
       effective_offset = 0
-      token_effective_offset = 0
 
       # Create copy of self with adjusted positions
       AbsoluteSuspendedTokens.new(
