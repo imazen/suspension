@@ -16,6 +16,10 @@ module Suspension
   #   exists for performance reasons only so that we can match long runs of
   #   plain text in StringScanner, rather than taking one character at a time
   #   if none of the other tokens matches.
+  # * :is_transparent_to_beginning_of_line - if true, then this token will be
+  #   transparent when it comes to determining beginning of line. Example
+  #   subtitle_mark and gap_mark are transparent so that both "\n# header" and
+  #   "\n@# header" will detect an atx header at beginning of line.
   #
   # Order of tokens
   # ---------------
@@ -96,9 +100,9 @@ module Suspension
   ].map { |e| Token.new(*e) }
 
   AT_SPECIFIC_TOKENS = [
-    [:gap_mark, /%/],
+    [:gap_mark, /%/, false, false, true], # transparent to beginning of line!
     [:record_mark, /#{BLOCK_START}#{OPT_SPACE}\^\^\^\s*?(\n?#{IAL})?#{BLOCK_END}/, true],
-    [:subtitle_mark, /@/]
+    [:subtitle_mark, /@/, false, false, true],  # transparent to beginning of line!
   ].map { |e| Token.new(*e) }
 
   KRAMDOWN_SUBSET_TOKENS = [

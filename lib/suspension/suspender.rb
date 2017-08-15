@@ -28,7 +28,7 @@ module Suspension
       @filtered_text = ""
       token_start = 0
       effective_bol = nil
-      previously_consumed_token_was_at_bol = nil
+      previous_token_was_at_bol_and_transparent = nil
       s = StringScanner.new(@original_doc)
       while !s.eos? do
         # puts
@@ -45,13 +45,13 @@ module Suspension
         #    See repositext_tokens.rb BLOCK_START for more details.
         effective_bol = (
           s.beginning_of_line? ||
-          previously_consumed_token_was_at_bol ||
+          previous_token_was_at_bol_and_transparent ||
           "\n" == s.peek(1)
         )
         active_tokens.each { |token|
           # puts "- trying token #{ token.name }"
           # puts "  #{ !token.must_be_start_of_line } || #{ s.beginning_of_line? } || #{ "\n" == s.peek(1) }"
-          previously_consumed_token_was_at_bol = false
+          previous_token_was_at_bol_and_transparent = false
           if(
             !token.must_be_start_of_line || effective_bol) &&
             (contents = s.scan(token.regex)
@@ -69,7 +69,7 @@ module Suspension
               # puts '  - found token '
               # puts "    start: #{ token_start }, name: #{ token.name }, contents: #{ contents.inspect }"
               @suspended_tokens << SuspendedToken.new(token_start, token.name, contents)
-              previously_consumed_token_was_at_bol = effective_bol
+              previous_token_was_at_bol_and_transparent = token.is_transparent_to_beginning_of_line && effective_bol
               break # OPTIMIZE: investigate if moving break after this if statement makes things faster. Shouldn't we break on plaintext matches, too?
             end
           end
