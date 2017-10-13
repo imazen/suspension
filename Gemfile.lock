@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    suspension (1.0.2)
+    suspension (1.1.0)
       diff_match_patch_native
 
 GEM
