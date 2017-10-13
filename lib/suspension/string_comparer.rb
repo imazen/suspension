@@ -72,79 +72,16 @@ module Suspension
             # Increment at the end of rescue block so that retries are idempotent
             idx += 1
           rescue ArgumentError => ex
-            if ex.message.index('invalid byte sequence')
-              # Handles invalid UTF-8 byte sequences in diff
-              # This is caused by two different multibyte characters at the
-              # same position where the first bytes are identical, and a
-              # subsequent one is different. DMP splits that multibyte char into
-              # separate bytes and thus creates an invalid UTF8 byte sequence:
-              #
-              # Example: "word2—word3" and "word2…word3"
-              #
-              # [
-              #   [0, "word2\xE2\x80"],
-              #   [-1, "\x94word3"],
-              #   [1, "\xA6word3"]
-              # ]
-              #
-              # Here we re-combine the bytes into a valid UTF8 string.
-              #
-              # Strategy: Remove trailing invalid bytes from common prefix, and
-              # prepend them to the two different suffixes and use the combined
-              # strings as diffs.
-              #
-              invalid_diff = diffs[idx].last
-              last_valid_byte_pos = -1
-              until(
-                (lvb = invalid_diff[last_valid_byte_pos]).nil? ||
-                lvb.valid_encoding?
-              )
-                last_valid_byte_pos -= 1
-                if last_valid_byte_pos < -5
-                  # Stop after looking back for 5 bytes
-                  raise "Handle this: #{ invalid_diff.inspect }"
-                end
-              end
-              valid_prefix = invalid_diff[0..last_valid_byte_pos]
-              invalid_suffix = invalid_diff[(last_valid_byte_pos + 1)..-1]
-              # Prepend following diffs with invalid_suffix if:
-              # * They exist
-              # * Are invalid
-              # * Don't have the bytes applied already. There are situations
-              #   where the algorithm may apply twice. See test case:
-              #       "word1 word2—word2…word3 word4 word5"
-              #       "word1 word2…word3 word4"
-              if(
-                diffs[idx+1] &&
-                !diffs[idx+1][1].valid_encoding? &&
-                diffs[idx+1][1].byteslice(0,invalid_suffix.bytesize) != invalid_suffix
-              )
-                # Prepend invalid_suffix to idx+1
-                diffs[idx+1][1].prepend(invalid_suffix)
-              end
-              if(
-                diffs[idx+2] &&
-                !diffs[idx+2][1].valid_encoding? &&
-                diffs[idx+2][1].byteslice(0,invalid_suffix.bytesize) != invalid_suffix
-              )
-                # Prepend invalid_suffix to idx+2
-                diffs[idx+2][1].prepend(invalid_suffix)
-              end
-              # Replace invalid_diff with valid_prefix
-              diffs[idx] = [diffs[idx].first, valid_prefix]
-              retry
-            else
-              valid_excerpt, valid_string = [excerpt, diff.last].map { |e|
-                e.to_s.force_encoding('UTF-8') \
-                      .encode('UTF-16', :invalid => :replace, :replace => '[invalid UTF-8 byte]') \
-                      .encode('UTF-8')
-              }
-              $stderr.puts "Error details:"
-              $stderr.puts " - line: #{ line_num_1 }"
-              $stderr.puts " - diff: #{ valid_string.inspect }"
-              $stderr.puts " - excerpt: #{ valid_excerpt.inspect }"
-              raise ex
-            end
+            valid_excerpt, valid_string = [excerpt, diff.last].map { |e|
+              e.to_s.force_encoding('UTF-8') \
+                    .encode('UTF-16', :invalid => :replace, :replace => '[invalid UTF-8 byte]') \
+                    .encode('UTF-8')
+            }
+            $stderr.puts "Error details:"
+            $stderr.puts " - line: #{ line_num_1 }"
+            $stderr.puts " - diff: #{ valid_string.inspect }"
+            $stderr.puts " - excerpt: #{ valid_excerpt.inspect }"
+            raise ex
           end
         }
 
