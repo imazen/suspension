@@ -4,7 +4,7 @@ $:.push File.expand_path("../lib", __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = "suspension"
-  s.version     = '1.1.0'
+  s.version     = '1.1.1'
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Jo Hund", "Nathanael Jones"]
   s.email       = ["jhund@clearcove.ca"]
