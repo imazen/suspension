@@ -48,13 +48,13 @@ module Suspension
         # Same start byte
         # Г      0413    D0 93
         # Д      0414    D0 94
-        # Same start bytes
+        # Same multiple start bytes
         # ╫      256B    E2 95 AB
         # ╭      256D    E2 95 AD
         # Same end byte
         # Ы      042B    D0 AB
         # ѫ      046B    D1 AB
-        # Same end bytes
+        # Same multiple end bytes
         # ╫      256B    E2 95 AB
         # ᕫ      156B    E1 95 AB
         # Same start and end bytes

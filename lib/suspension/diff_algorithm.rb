@@ -98,7 +98,7 @@ module Suspension
       # NOTES: The diffs in each cluster must have consecutive indexes
       # Ideas for resolving:
       #  * invalid bytes will always be at the margins (start or end) of the string.
-      invalid_diff_clusters.each { |(cluster_marker, clustered_diffs)|
+      invalid_diff_clusters.each { |(_cluster_marker, clustered_diffs)|
         cluster_signature = clustered_diffs.map { |diff, idx| diff[DIFF_TYPE_IDX] }
         diff_idxs = clustered_diffs.map { |diff, idx| idx }
         case cluster_signature
@@ -223,7 +223,7 @@ module Suspension
       end
       byte_count = (last_pos - first_invalid_byte_pos) + 1
       invalid_bytes = inv_str.byteslice(first_invalid_byte_pos..last_pos)
-      r = [invalid_bytes, byte_count]
+      [invalid_bytes, byte_count]
     end
 
     START_BYTE_MASKS_AND_MATCHES = [
