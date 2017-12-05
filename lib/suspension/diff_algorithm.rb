@@ -153,6 +153,25 @@ module Suspension
           diffs[diff_idxs[1]][DIFF_STR_IDX] << bs2mv
           diffs[diff_idxs[2]][DIFF_STR_IDX] << bs2mv
           diffs[diff_idxs[3]][DIFF_STR_IDX] = diffs[diff_idxs[3]][DIFF_STR_IDX].byteslice(b_count..-1)
+        when [0, -1, 0, -1, 0]
+          # Multiple deletions with same end bytes
+          # Start from the end so that we get a valid byte sequence in the middle ones
+          # Move leading invalid bytes of fifth diff to end of fourth diff
+          bs2mv, b_count = get_leading_invalid_bytes(diffs[diff_idxs[4]][DIFF_STR_IDX])
+          diffs[diff_idxs[3]][DIFF_STR_IDX] << bs2mv
+          diffs[diff_idxs[4]][DIFF_STR_IDX] = diffs[diff_idxs[4]][DIFF_STR_IDX].byteslice(b_count..-1)
+          # Move leading invalid bytes of fourth diff to end of third diff
+          bs2mv, b_count = get_leading_invalid_bytes(diffs[diff_idxs[3]][DIFF_STR_IDX])
+          diffs[diff_idxs[2]][DIFF_STR_IDX] << bs2mv
+          diffs[diff_idxs[3]][DIFF_STR_IDX] = diffs[diff_idxs[3]][DIFF_STR_IDX].byteslice(b_count..-1)
+          # Move leading invalid bytes of third diff to end of second diff
+          bs2mv, b_count = get_leading_invalid_bytes(diffs[diff_idxs[2]][DIFF_STR_IDX])
+          diffs[diff_idxs[1]][DIFF_STR_IDX] << bs2mv
+          diffs[diff_idxs[2]][DIFF_STR_IDX] = diffs[diff_idxs[2]][DIFF_STR_IDX].byteslice(b_count..-1)
+          # Move leading invalid bytes of second diff to end of first diff
+          bs2mv, b_count = get_leading_invalid_bytes(diffs[diff_idxs[1]][DIFF_STR_IDX])
+          diffs[diff_idxs[0]][DIFF_STR_IDX] << bs2mv
+          diffs[diff_idxs[1]][DIFF_STR_IDX] = diffs[diff_idxs[1]][DIFF_STR_IDX].byteslice(b_count..-1)
         else
           raise "Handle this: #{ clustered_diffs }.inspect"
         end
